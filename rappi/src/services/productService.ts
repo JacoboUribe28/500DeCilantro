@@ -1,13 +1,12 @@
-import { User } from "../models/User";
+import { Product } from "../models/product";
 
-const API_URL = import.meta.env.VITE_API_URL+"/users"||""; // Reemplaza con la URL real
+const API_URL = import.meta.env.VITE_API_URL + "/products" || ""; // Reemplaza con la URL real
 
-// Obtener todos los usuarios
-export const getUsers = async (): Promise<User[]> => {
-    console.log("aqui "+API_URL)
+// Obtener todos los productos
+export const getProducts = async (): Promise<Product[]> => {
     try {
         const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Error al obtener usuarios");
+        if (!response.ok) throw new Error("Error al obtener productos");
         return await response.json();
     } catch (error) {
         console.error(error);
@@ -15,11 +14,11 @@ export const getUsers = async (): Promise<User[]> => {
     }
 };
 
-// Obtener un usuario por ID
-export const getUserById = async (id: number): Promise<User | null> => {
+// Obtener un producto por ID
+export const getProductById = async (id: number): Promise<Product | null> => {
     try {
         const response = await fetch(`${API_URL}/${id}`);
-        if (!response.ok) throw new Error("Usuario no encontrado");
+        if (!response.ok) throw new Error("Producto no encontrado");
         return await response.json();
     } catch (error) {
         console.error(error);
@@ -27,15 +26,15 @@ export const getUserById = async (id: number): Promise<User | null> => {
     }
 };
 
-// Crear un nuevo usuario
-export const createUser = async (user: Omit<User, "id">): Promise<User | null> => {
+// Crear un nuevo producto
+export const createProduct = async (product: Omit<Product, "id">): Promise<Product | null> => {
     try {
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user),
+            body: JSON.stringify(product),
         });
-        if (!response.ok) throw new Error("Error al crear usuario");
+        if (!response.ok) throw new Error("Error al crear producto");
         return await response.json();
     } catch (error) {
         console.error(error);
@@ -43,15 +42,15 @@ export const createUser = async (user: Omit<User, "id">): Promise<User | null> =
     }
 };
 
-// Actualizar usuario
-export const updateUser = async (id: number, user: Partial<User>): Promise<User | null> => {
+// Actualizar producto
+export const updateProduct = async (id: number, product: Partial<Product>): Promise<Product | null> => {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user),
+            body: JSON.stringify(product),
         });
-        if (!response.ok) throw new Error("Error al actualizar usuario");
+        if (!response.ok) throw new Error("Error al actualizar producto");
         return await response.json();
     } catch (error) {
         console.error(error);
@@ -59,11 +58,11 @@ export const updateUser = async (id: number, user: Partial<User>): Promise<User 
     }
 };
 
-// Eliminar usuario
-export const deleteUser = async (id: number): Promise<boolean> => {
+// Eliminar producto
+export const deleteProduct = async (id: number): Promise<boolean> => {
     try {
         const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        if (!response.ok) throw new Error("Error al eliminar usuario");
+        if (!response.ok) throw new Error("Error al eliminar producto");
         return true;
     } catch (error) {
         console.error(error);
