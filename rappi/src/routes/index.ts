@@ -21,12 +21,146 @@ const ListRestaurant = lazy(() => import('../pages/Restaurant/listRestaurant'));
 const ListPhoto = lazy(() => import('../pages/Photo/listPhoto'));
 const ListProduct = lazy(() => import('../pages/Product/listProduct'));
 const ListShift = lazy(() => import('../pages/Shift/listShift'));
+const CreateAddress = lazy(() => import('../pages/Address/Create'));
+const CreateCustomer = lazy(() => import('../pages/Customer/Create'));
+const CreateDriver = lazy(() => import('../pages/Driver/Create'));
+const CreateIssue = lazy(() => import('../pages/Issue/Create'));
+const CreateMenu = lazy(() => import('../pages/Menu/Create'));
+const CreateMotorcycle = lazy(() => import('../pages/Motorcycle/Create'));
+const CreateOrder = lazy(() => import('../pages/Order/Create'));
+const CreateRestaurant = lazy(() => import('../pages/Restaurant/Create'));
+const CreatePhoto = lazy(() => import('../pages/Photo/Create'));
+const CreateProduct = lazy(() => import('../pages/Product/Create'));
+const CreateShift = lazy(() => import('../pages/Shift/Create'));
+const UpdateAddress = lazy(() => import('../pages/Address/Update'));
+const UpdateCustomer = lazy(() => import('../pages/Customer/Update'));
+const UpdateDriver = lazy(() => import('../pages/Driver/Update'));
+const UpdateIssue = lazy(() => import('../pages/Issue/Update'));
+const UpdateMenu = lazy(() => import('../pages/Menu/Update'));
+const UpdateMotorcycle = lazy(() => import('../pages/Motorcycle/Update'));
+const UpdateOrder = lazy(() => import('../pages/Order/Update'));
+const UpdateRestaurant = lazy(() => import('../pages/Restaurant/Update'));
+const UpdatePhoto = lazy(() => import('../pages/Photo/Update'));
+const UpdateProduct = lazy(() => import('../pages/Product/Update'));
+const UpdateShift = lazy(() => import('../pages/Shift/Update'));
+
+
 
 const coreRoutes = [
   {
     path: '/list-users',
     title: 'ListUsers',
     component: ListUsers,
+  },
+  {
+    path: '/update-address/:id',
+    title: 'UpdateAddress',
+    component: UpdateAddress,
+  },
+  {
+    path: '/update-customer/:id',
+    title: 'UpdateCustomer',
+    component: UpdateCustomer,
+  },
+  {
+    path: '/update-driver/:id',
+    title: 'UpdateDriver',
+    component: UpdateDriver,
+  },
+  {
+    path: '/update-issue/:id',
+    title: 'UpdateIssue',
+    component: UpdateIssue,
+  },
+  {
+    path: '/update-menu/:id',
+    title: 'UpdateMenu',
+    component: UpdateMenu,
+  },
+  {
+    path: '/update-motorcycle/:id',
+    title: 'UpdateMotorcycle',
+    component: UpdateMotorcycle,
+  },
+  {
+    path: '/update-order/:id',
+    title: 'UpdateOrder',
+    component: UpdateOrder,
+  },
+  {
+    path: '/update-restaurant/:id',
+    title: 'UpdateRestaurant',
+    component: UpdateRestaurant,
+  },
+  {
+    path: '/update-photo/:id',
+    title: 'UpdatePhoto',
+    component: UpdatePhoto,
+  },
+  {
+    path: '/update-product/:id',
+    title: 'UpdateProduct',
+    component: UpdateProduct,
+  },
+  {
+    path: '/update-shift/:id',
+    title: 'UpdateShift',
+    component: UpdateShift,
+  },
+  {
+    path: '/create-address',
+    title: 'CreateAddress',
+    component: CreateAddress,
+  },
+  {
+    path: '/create-customer',
+    title: 'CreateCustomer',
+    component: CreateCustomer,
+  },
+  {
+    path: '/create-driver',
+    title: 'CreateDriver',
+    component: CreateDriver,
+  },
+  {
+    path: '/create-issue',
+    title: 'CreateIssue',
+    component: CreateIssue,
+  },
+  {
+    path: '/create-menu',
+    title: 'CreateMenu',
+    component: CreateMenu,
+  },
+  {
+    path: '/create-motorcycle',
+    title: 'CreateMotorcycle',
+    component: CreateMotorcycle,
+  },
+  {
+    path: '/create-order',
+    title: 'CreateOrder',
+    component: CreateOrder,
+  },
+  {
+    path: '/create-restaurant',
+    title: 'CreateRestaurant',
+    component: CreateRestaurant,
+  },
+  {
+    path: '/create-photo',
+    title: 'CreatePhoto',
+    component: CreatePhoto,
+  },
+  {
+    path: '/create-product',
+    title: 'CreateProduct',
+    component: CreateProduct,
+  },
+  {
+    path: '/create-shift',
+    title: 'CreateShift',
+    component: CreateShift,
   },
   {
     path: '/list-address',
