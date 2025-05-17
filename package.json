@@ -1,5 +1,9 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "@react-oauth/google": "^0.12.2"
+=======
+    "axios": "^1.9.0"
+>>>>>>> 3798a3d1670b6673b88773c5f944b0fdc64573fb
   }
 }
