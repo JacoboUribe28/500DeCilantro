@@ -10,7 +10,7 @@ const createToast=(title: string, msg: string, type: number)=>{toast.custom((t) 
       }
       max-w-md w-full ${type=='0'?"bg-[#04b20c]":type=='1'?"bg-[#eab90f]":"bg-[#e13f32]"} shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
     >
-      <div className="flex-1 w-0 p-4 ">
+      <div className="flex-1 w-0 p-4 ">z
         <div className="flex items-start">
           
           <div className="ml-3 flex-1">

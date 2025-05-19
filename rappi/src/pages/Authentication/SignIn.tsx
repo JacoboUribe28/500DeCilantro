@@ -1,8 +1,36 @@
 import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
-
+import {useGoogleLogin} from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom';
 const SignIn = () => {
+
+  const navigate=useNavigate();
+  const login = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      // tokenResponse.access_token contiene el token de Google
+      try {
+        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: {
+            'Authorization': `Bearer ${tokenResponse.access_token}`
+          },
+        });
+        const userInfo = await res.json();
+
+        // Guardar en localStorage
+        localStorage.setItem('user', JSON.stringify(userInfo));
+
+        console.log('Usuario de Google:', userInfo);
+        navigate('/');
+      } catch (error) {
+        console.error('Error al obtener información del usuario', error);
+      }
+    },
+    onError: () => {
+      console.error('Error al iniciar sesión con Google');
+    },
+  });
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -226,7 +254,12 @@ const SignIn = () => {
                   />
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+                <button 
+                onClick={(e)=>{
+                   e.preventDefault();
+                   login();
+                }}
+                className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
                     <svg
                       width="20"
@@ -265,7 +298,7 @@ const SignIn = () => {
 
                 <div className="mt-6 text-center">
                   <p>
-                    Don’t have any account?{' '}
+                    Don't have any account?{' '}
                     <Link to="/auth/signup" className="text-primary">
                       Sign Up
                     </Link>
