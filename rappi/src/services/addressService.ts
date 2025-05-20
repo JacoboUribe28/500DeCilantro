@@ -1,15 +1,15 @@
 import { Address } from "../models/address";
+import api from "../interceptors/axiosInterceptor";
 
-const API_URL = import.meta.env.VITE_API_URL + "/addresses" || ""; // Reemplaza con la URL real
+const API_URL = import.meta.env.VITE_API_URL + "/addresses" || "";
 
 // Obtener todas las direcciones
 export const getAddresses = async (): Promise<Address[]> => {
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Error al obtener direcciones");
-        return await response.json();
+        const response = await api.get<Address[]>(API_URL);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Error al obtener direcciones", error);
         return [];
     }
 };
@@ -17,11 +17,10 @@ export const getAddresses = async (): Promise<Address[]> => {
 // Obtener una dirección por ID
 export const getAddressById = async (id: number): Promise<Address | null> => {
     try {
-        const response = await fetch(`${API_URL}/${id}`);
-        if (!response.ok) throw new Error("Dirección no encontrada");
-        return await response.json();
+        const response = await api.get<Address>(`${API_URL}/${id}`);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Dirección no encontrada", error);
         return null;
     }
 };
@@ -29,15 +28,10 @@ export const getAddressById = async (id: number): Promise<Address | null> => {
 // Crear una nueva dirección
 export const createAddress = async (address: Omit<Address, "id">): Promise<Address | null> => {
     try {
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(address),
-        });
-        if (!response.ok) throw new Error("Error al crear dirección");
-        return await response.json();
+        const response = await api.post<Address>(API_URL, address);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Error al crear dirección", error);
         return null;
     }
 };
@@ -45,15 +39,10 @@ export const createAddress = async (address: Omit<Address, "id">): Promise<Addre
 // Actualizar dirección
 export const updateAddress = async (id: number, address: Partial<Address>): Promise<Address | null> => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(address),
-        });
-        if (!response.ok) throw new Error("Error al actualizar dirección");
-        return await response.json();
+        const response = await api.put<Address>(`${API_URL}/${id}`, address);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Error al actualizar dirección", error);
         return null;
     }
 };
@@ -61,11 +50,10 @@ export const updateAddress = async (id: number, address: Partial<Address>): Prom
 // Eliminar dirección
 export const deleteAddress = async (id: number): Promise<boolean> => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        if (!response.ok) throw new Error("Error al eliminar dirección");
+        await api.delete(`${API_URL}/${id}`);
         return true;
     } catch (error) {
-        console.error(error);
+        console.error("Error al eliminar dirección", error);
         return false;
     }
 };
