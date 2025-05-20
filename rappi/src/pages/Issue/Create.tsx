@@ -10,7 +10,7 @@ const IssueForm: React.FC<{ handleCreate: (issue: Omit<Issue, 'id'>) => void }> 
     const [issueType, setIssueType] = useState('');
     const [dateReported, setDateReported] = useState('');
     const [status, setStatus] = useState('');
-    const [motorcycleId, setMotorcycleId] = useState<number | ''>('');
+    const [motorcycleId, setMotorcycleId] = useState('');
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,63 +19,70 @@ const IssueForm: React.FC<{ handleCreate: (issue: Omit<Issue, 'id'>) => void }> 
             issue_type: issueType,
             date_reported: dateReported ? new Date(dateReported) : undefined,
             status,
-            motorcycle_id: motorcycleId === '' ? undefined : motorcycleId,
+            motorcycle_id: motorcycleId ? Number(motorcycleId) : undefined,
         });
     };
 
     return (
-        <form onSubmit={onSubmit} className="space-y-4 max-w-md">
+        <form onSubmit={onSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Crear Nuevo Issue</h3>
             <div>
-                <label className="block mb-1 font-semibold">Descripción</label>
+                <label className="block mb-2 font-semibold text-gray-700">Descripción</label>
                 <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese la descripción"
                     required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Tipo de Incidencia</label>
+                <label className="block mb-2 font-semibold text-gray-700">Tipo de Issue</label>
                 <input
                     type="text"
                     value={issueType}
                     onChange={(e) => setIssueType(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el tipo de issue"
                     required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Fecha Reportada</label>
+                <label className="block mb-2 font-semibold text-gray-700">Fecha Reportada</label>
                 <input
                     type="date"
                     value={dateReported}
                     onChange={(e) => setDateReported(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Estado</label>
+                <label className="block mb-2 font-semibold text-gray-700">Estado</label>
                 <input
                     type="text"
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el estado"
+                    required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">ID de Motocicleta</label>
+                <label className="block mb-2 font-semibold text-gray-700">ID de Motocicleta</label>
                 <input
                     type="number"
                     value={motorcycleId}
-                    onChange={(e) => setMotorcycleId(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
+                    onChange={(e) => setMotorcycleId(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el ID de la motocicleta"
                 />
             </div>
             <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="mt-2 w-full rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition"
             >
-                Crear Incidencia
+                Crear Issue
             </button>
         </form>
     );
@@ -90,16 +97,16 @@ const CreateIssuePage: React.FC = () => {
             if (createdIssue) {
                 Swal.fire({
                     title: 'Completado',
-                    text: 'Se ha creado correctamente la incidencia',
+                    text: 'Se ha creado correctamente el issue',
                     icon: 'success',
                     timer: 3000,
                 });
-                console.log('Incidencia creada con éxito:', createdIssue);
-                navigate('/issues');
+                console.log('Issue creado con éxito:', createdIssue);
+                navigate('/issue/list');
             } else {
                 Swal.fire({
                     title: 'Error',
-                    text: 'Existe un problema al momento de crear la incidencia',
+                    text: 'Existe un problema al momento de crear el issue',
                     icon: 'error',
                     timer: 3000,
                 });
@@ -107,7 +114,7 @@ const CreateIssuePage: React.FC = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error',
-                text: 'Existe un problema al momento de crear la incidencia',
+                text: 'Existe un problema al momento de crear el issue',
                 icon: 'error',
                 timer: 3000,
             });
@@ -116,8 +123,8 @@ const CreateIssuePage: React.FC = () => {
 
     return (
         <div>
-            <h2>Crear Incidencia</h2>
-            <Breadcrumb pageName="Crear Incidencia" />
+            <h2>Crear Issue</h2>
+            <Breadcrumb pageName="Crear Issue" />
             <IssueForm handleCreate={handleCreateIssue} />
         </div>
     );

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const MotorcycleForm: React.FC<{ handleCreate: (motorcycle: Omit<Motorcycle, 'id'>) => void }> = ({ handleCreate }) => {
     const [licensePlate, setLicensePlate] = useState('');
     const [brand, setBrand] = useState('');
-    const [year, setYear] = useState<number | ''>('');
+    const [year, setYear] = useState('');
     const [status, setStatus] = useState('');
 
     const onSubmit = (e: React.FormEvent) => {
@@ -16,56 +16,61 @@ const MotorcycleForm: React.FC<{ handleCreate: (motorcycle: Omit<Motorcycle, 'id
         handleCreate({
             license_plate: licensePlate,
             brand,
-            year: year === '' ? undefined : year,
+            year: year ? Number(year) : undefined,
             status,
         });
     };
 
     return (
-        <form onSubmit={onSubmit} className="space-y-4 max-w-md">
+        <form onSubmit={onSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Crear Nueva Motocicleta</h3>
             <div>
-                <label className="block mb-1 font-semibold">Placa</label>
+                <label className="block mb-2 font-semibold text-gray-700">Placa</label>
                 <input
                     type="text"
                     value={licensePlate}
                     onChange={(e) => setLicensePlate(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese la placa"
                     required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Marca</label>
+                <label className="block mb-2 font-semibold text-gray-700">Marca</label>
                 <input
                     type="text"
                     value={brand}
                     onChange={(e) => setBrand(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese la marca"
                     required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Año</label>
+                <label className="block mb-2 font-semibold text-gray-700">Año</label>
                 <input
                     type="number"
                     value={year}
-                    onChange={(e) => setYear(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
-                    min={1900}
-                    max={new Date().getFullYear()}
+                    onChange={(e) => setYear(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el año"
+                    required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Estado</label>
+                <label className="block mb-2 font-semibold text-gray-700">Estado</label>
                 <input
                     type="text"
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el estado"
+                    required
                 />
             </div>
             <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="mt-2 w-full rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition"
             >
                 Crear Motocicleta
             </button>
@@ -87,7 +92,7 @@ const CreateMotorcyclePage: React.FC = () => {
                     timer: 3000,
                 });
                 console.log('Motocicleta creada con éxito:', createdMotorcycle);
-                navigate('/motorcycles');
+                navigate('/motorcycle/list');
             } else {
                 Swal.fire({
                     title: 'Error',

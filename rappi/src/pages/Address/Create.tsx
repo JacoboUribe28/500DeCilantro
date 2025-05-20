@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 import { Address } from '../../models/address';
 import { createAddress } from '../../services/addressService';
-import Swal from 'sweetalert2';
 import Breadcrumb from '../../components/Breadcrumb';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,67 +26,74 @@ const AddressForm: React.FC<{ handleCreate: (address: Omit<Address, 'id'>) => vo
     };
 
     return (
-        <form onSubmit={onSubmit} className="space-y-4 max-w-md">
+        <form onSubmit={onSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Crear Nueva Dirección</h3>
             <div>
-                <label className="block mb-1 font-semibold">Calle</label>
+                <label className="block mb-2 font-semibold text-gray-700">Calle</label>
                 <input
                     type="text"
                     value={street}
                     onChange={(e) => setStreet(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese la calle"
                     required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Ciudad</label>
+                <label className="block mb-2 font-semibold text-gray-700">Ciudad</label>
                 <input
                     type="text"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese la ciudad"
                     required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Estado</label>
+                <label className="block mb-2 font-semibold text-gray-700">Estado</label>
                 <input
                     type="text"
                     value={state}
                     onChange={(e) => setState(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el estado"
                     required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Código postal</label>
+                <label className="block mb-2 font-semibold text-gray-700">Código postal</label>
                 <input
                     type="text"
                     value={postalCode}
                     onChange={(e) => setPostalCode(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el código postal"
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Información adiccional</label>
+                <label className="block mb-2 font-semibold text-gray-700">Información adicional</label>
                 <input
                     type="text"
                     value={additionalInfo}
                     onChange={(e) => setAdditionalInfo(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese información adicional"
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Order ID</label>
+                <label className="block mb-2 font-semibold text-gray-700">Order ID</label>
                 <input
                     type="text"
                     value={orderId}
                     onChange={(e) => setOrderId(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el Order ID"
                 />
             </div>
             <button
                 type="submit"
-                className="bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700"
+                className="mt-2 w-full rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition"
             >
                 Crear Dirección
             </button>
@@ -108,7 +115,7 @@ const CreateAddressPage: React.FC = () => {
                     timer: 3000,
                 });
                 console.log('Dirección creada con éxito:', createdAddress);
-                navigate('/address');
+                navigate('/address/list');
             } else {
                 Swal.fire({
                     title: 'Error',

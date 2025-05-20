@@ -23,20 +23,20 @@ const UpdateShiftPage = () => {
         fetchShift();
     }, [id]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setShift(prev => ({
-            ...prev,
-            [name]: name === 'driver_id' || name === 'motorcycle_id' ? Number(value) : value
-        }));
-    };
-
-    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setShift(prev => ({
-            ...prev,
-            [name]: value ? new Date(value) : undefined,
-        }));
+        setShift(prev => {
+            if (!prev) return prev;
+            if (name === "driver_id" || name === "motorcycle_id") {
+                const numValue = value === "" ? undefined : Number(value);
+                return { ...prev, [name]: numValue };
+            }
+            if (name === "start_time" || name === "end_time") {
+                const dateValue = value === "" ? undefined : new Date(value);
+                return { ...prev, [name]: dateValue };
+            }
+            return { ...prev, [name]: value };
+        });
     };
 
     const handleUpdateShift = async (e: React.FormEvent) => {
@@ -60,7 +60,7 @@ const UpdateShiftPage = () => {
                     icon: "success",
                     timer: 3000
                 });
-                navigate("/shifts");
+                navigate("/shift/list");
             } else {
                 Swal.fire({
                     title: "Error",
@@ -86,72 +86,102 @@ const UpdateShiftPage = () => {
     return (
         <>
             <Breadcrumb pageName="Actualizar Turno" />
-            <form onSubmit={handleUpdateShift}>
-                <div>
-                    <label htmlFor="start_time">Hora de inicio:</label>
-                    <input
-                        type="datetime-local"
-                        id="start_time"
-                        name="start_time"
-                        value={shift.start_time ? new Date(shift.start_time).toISOString().slice(0, 16) : ''}
-                        onChange={handleDateChange}
-                        required
-                    />
+            <div className="flex flex-col gap-9 bg-blue-100">
+                <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-6.5">
+                    <h3 className="font-medium text-black dark:text-white mb-6 text-lg">
+                        Actualizar Turno
+                    </h3>
+                    <form onSubmit={handleUpdateShift} className="flex flex-col gap-6">
+                        <div className="flex flex-col">
+                            <label htmlFor="start_time" className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Hora de Inicio:
+                            </label>
+                            <input
+                                type="datetime-local"
+                                id="start_time"
+                                name="start_time"
+                                value={shift.start_time ? new Date(shift.start_time).toISOString().slice(0,16) : ''}
+                                onChange={handleChange}
+                                required
+                                className="rounded border border-gray-300 bg-gray-50 px-4 py-2 text-gray-900 focus:border-primary focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary dark:focus:ring-primary"
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <label htmlFor="end_time" className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Hora de Fin:
+                            </label>
+                            <input
+                                type="datetime-local"
+                                id="end_time"
+                                name="end_time"
+                                value={shift.end_time ? new Date(shift.end_time).toISOString().slice(0,16) : ''}
+                                onChange={handleChange}
+                                required
+                                className="rounded border border-gray-300 bg-gray-50 px-4 py-2 text-gray-900 focus:border-primary focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary dark:focus:ring-primary"
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <label htmlFor="status" className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Estado:
+                            </label>
+                            <input
+                                type="text"
+                                id="status"
+                                name="status"
+                                value={shift.status || ''}
+                                onChange={handleChange}
+                                required
+                                className="rounded border border-gray-300 bg-gray-50 px-4 py-2 text-gray-900 focus:border-primary focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary dark:focus:ring-primary"
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <label htmlFor="driver_id" className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                ID Conductor:
+                            </label>
+                            <input
+                                type="number"
+                                id="driver_id"
+                                name="driver_id"
+                                value={shift.driver_id !== undefined ? shift.driver_id : ''}
+                                onChange={handleChange}
+                                required
+                                min={1}
+                                className="rounded border border-gray-300 bg-gray-50 px-4 py-2 text-gray-900 focus:border-primary focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary dark:focus:ring-primary"
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <label htmlFor="motorcycle_id" className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                ID Motocicleta:
+                            </label>
+                            <input
+                                type="number"
+                                id="motorcycle_id"
+                                name="motorcycle_id"
+                                value={shift.motorcycle_id !== undefined ? shift.motorcycle_id : ''}
+                                onChange={handleChange}
+                                required
+                                min={1}
+                                className="rounded border border-gray-300 bg-gray-50 px-4 py-2 text-gray-900 focus:border-primary focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary dark:focus:ring-primary"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="inline-flex items-center justify-center rounded bg-primary px-6 py-2 font-medium text-white hover:bg-primary/90"
+                        >
+                            Actualizar Turno
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => navigate("/shift/list")}
+                            className="mt-2 inline-block rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
+                        >
+                            Volver a la lista
+                        </button>
+                    </form>
                 </div>
-                <div>
-                    <label htmlFor="end_time">Hora de fin:</label>
-                    <input
-                        type="datetime-local"
-                        id="end_time"
-                        name="end_time"
-                        value={shift.end_time ? new Date(shift.end_time).toISOString().slice(0, 16) : ''}
-                        onChange={handleDateChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="status">Estado:</label>
-                    <select
-                        id="status"
-                        name="status"
-                        value={shift.status || ''}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Seleccione un estado</option>
-                        <option value="active">Activo</option>
-                        <option value="inactive">Inactivo</option>
-                        <option value="completed">Completado</option>
-                    </select>
-                </div>
-                <div>
-                    <label htmlFor="driver_id">ID del conductor:</label>
-                    <input
-                        type="number"
-                        id="driver_id"
-                        name="driver_id"
-                        value={shift.driver_id ?? ''}
-                        onChange={handleChange}
-                        required
-                        min={1}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="motorcycle_id">ID de la motocicleta:</label>
-                    <input
-                        type="number"
-                        id="motorcycle_id"
-                        name="motorcycle_id"
-                        value={shift.motorcycle_id ?? ''}
-                        onChange={handleChange}
-                        required
-                        min={1}
-                    />
-                </div>
-                <button type="submit">Actualizar Turno</button>
-            </form>
+            </div>
         </>
     );
-};
+}
 
 export default UpdateShiftPage;

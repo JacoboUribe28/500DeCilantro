@@ -5,59 +5,109 @@ import Swal from 'sweetalert2';
 import Breadcrumb from '../../components/Breadcrumb';
 import { useNavigate } from 'react-router-dom';
 
-const CreateShift = () => {
+const ShiftForm: React.FC<{ handleCreate: (shift: Omit<Shift, 'id'>) => void }> = ({ handleCreate }) => {
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
+    const [status, setStatus] = useState('');
+    const [driverId, setDriverId] = useState('');
+    const [motorcycleId, setMotorcycleId] = useState('');
+
+    const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        handleCreate({
+            start_time: startTime ? new Date(startTime) : undefined,
+            end_time: endTime ? new Date(endTime) : undefined,
+            status,
+            driver_id: driverId ? Number(driverId) : undefined,
+            motorcycle_id: motorcycleId ? Number(motorcycleId) : undefined,
+        });
+    };
+
+    return (
+        <form onSubmit={onSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Crear Nuevo Turno</h3>
+            <div>
+                <label className="block mb-2 font-semibold text-gray-700">Hora de Inicio</label>
+                <input
+                    type="datetime-local"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    required
+                />
+            </div>
+            <div>
+                <label className="block mb-2 font-semibold text-gray-700">Hora de Fin</label>
+                <input
+                    type="datetime-local"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    required
+                />
+            </div>
+            <div>
+                <label className="block mb-2 font-semibold text-gray-700">Estado</label>
+                <input
+                    type="text"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el estado"
+                    required
+                />
+            </div>
+            <div>
+                <label className="block mb-2 font-semibold text-gray-700">ID del Conductor</label>
+                <input
+                    type="number"
+                    value={driverId}
+                    onChange={(e) => setDriverId(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el ID del conductor"
+                    required
+                />
+            </div>
+            <div>
+                <label className="block mb-2 font-semibold text-gray-700">ID de la Motocicleta</label>
+                <input
+                    type="number"
+                    value={motorcycleId}
+                    onChange={(e) => setMotorcycleId(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el ID de la motocicleta"
+                    required
+                />
+            </div>
+            <button
+                type="submit"
+                className="mt-2 w-full rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition"
+            >
+                Crear Turno
+            </button>
+        </form>
+    );
+};
+
+const CreateShiftPage: React.FC = () => {
     const navigate = useNavigate();
 
-    const [shift, setShift] = useState<Omit<Shift, 'id'>>({
-        start_time: undefined,
-        end_time: undefined,
-        status: '',
-        driver_id: undefined,
-        motorcycle_id: undefined,
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setShift(prev => ({
-            ...prev,
-            [name]: name === 'driver_id' || name === 'motorcycle_id' ? (value ? parseInt(value) : undefined) : value,
-        }));
-    };
-
-    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setShift(prev => ({
-            ...prev,
-            [name]: value ? new Date(value) : undefined,
-        }));
-    };
-
-    const handleCreateShift = async () => {
-        // Validate required fields
-        if (!shift.start_time || !shift.end_time || !shift.status || !shift.driver_id || !shift.motorcycle_id) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor complete todos los campos obligatorios.',
-                icon: 'error',
-                timer: 3000,
-            });
-            return;
-        }
-
+    const handleCreateShift = async (shift: Omit<Shift, 'id'>) => {
         try {
             const createdShift = await createShift(shift);
             if (createdShift) {
                 Swal.fire({
                     title: 'Completado',
-                    text: 'El turno se ha creado correctamente.',
+                    text: 'Se ha creado correctamente el turno',
                     icon: 'success',
                     timer: 3000,
                 });
-                navigate('/shifts');
+                console.log('Turno creado con éxito:', createdShift);
+                navigate('/shift/list');
             } else {
                 Swal.fire({
                     title: 'Error',
-                    text: 'Existe un problema al momento de crear el turno.',
+                    text: 'Existe un problema al momento de crear el turno',
                     icon: 'error',
                     timer: 3000,
                 });
@@ -65,7 +115,7 @@ const CreateShift = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error',
-                text: 'Existe un problema al momento de crear el turno.',
+                text: 'Existe un problema al momento de crear el turno',
                 icon: 'error',
                 timer: 3000,
             });
@@ -76,77 +126,9 @@ const CreateShift = () => {
         <div>
             <h2>Crear Turno</h2>
             <Breadcrumb pageName="Crear Turno" />
-            <form
-                onSubmit={e => {
-                    e.preventDefault();
-                    handleCreateShift();
-                }}
-            >
-                <div>
-                    <label htmlFor="start_time">Hora de inicio:</label>
-                    <input
-                        type="datetime-local"
-                        id="start_time"
-                        name="start_time"
-                        value={shift.start_time ? shift.start_time.toISOString().slice(0, 16) : ''}
-                        onChange={handleDateChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="end_time">Hora de fin:</label>
-                    <input
-                        type="datetime-local"
-                        id="end_time"
-                        name="end_time"
-                        value={shift.end_time ? shift.end_time.toISOString().slice(0, 16) : ''}
-                        onChange={handleDateChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="status">Estado:</label>
-                    <select
-                        id="status"
-                        name="status"
-                        value={shift.status}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Seleccione un estado</option>
-                        <option value="active">Activo</option>
-                        <option value="inactive">Inactivo</option>
-                        <option value="completed">Completado</option>
-                    </select>
-                </div>
-                <div>
-                    <label htmlFor="driver_id">ID del conductor:</label>
-                    <input
-                        type="number"
-                        id="driver_id"
-                        name="driver_id"
-                        value={shift.driver_id ?? ''}
-                        onChange={handleChange}
-                        required
-                        min={1}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="motorcycle_id">ID de la motocicleta:</label>
-                    <input
-                        type="number"
-                        id="motorcycle_id"
-                        name="motorcycle_id"
-                        value={shift.motorcycle_id ?? ''}
-                        onChange={handleChange}
-                        required
-                        min={1}
-                    />
-                </div>
-                <button type="submit">Crear Turno</button>
-            </form>
+            <ShiftForm handleCreate={handleCreateShift} />
         </div>
     );
 };
 
-export default CreateShift;
+export default CreateShiftPage;

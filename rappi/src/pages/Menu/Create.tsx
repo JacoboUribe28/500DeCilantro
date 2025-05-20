@@ -6,33 +6,33 @@ import Breadcrumb from '../../components/Breadcrumb';
 import { useNavigate } from 'react-router-dom';
 
 const MenuForm: React.FC<{ handleCreate: (menu: Omit<Menu, 'id'>) => void }> = ({ handleCreate }) => {
-    const [price, setPrice] = useState<number | ''>('');
+    const [price, setPrice] = useState('');
     const [availability, setAvailability] = useState(false);
-    const [restaurantId, setRestaurantId] = useState<number | ''>('');
-    const [productId, setProductId] = useState<number | ''>('');
+    const [restaurantId, setRestaurantId] = useState('');
+    const [productId, setProductId] = useState('');
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         handleCreate({
-            price: price === '' ? undefined : price,
+            price: price ? Number(price) : undefined,
             availbality: availability,
-            restaurant_id: restaurantId === '' ? undefined : restaurantId,
-            product_id: productId === '' ? undefined : productId,
+            restaurant_id: restaurantId ? Number(restaurantId) : undefined,
+            product_id: productId ? Number(productId) : undefined,
         });
     };
 
     return (
-        <form onSubmit={onSubmit} className="space-y-4 max-w-md">
+        <form onSubmit={onSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Crear Nuevo Menú</h3>
             <div>
-                <label className="block mb-1 font-semibold">Precio</label>
+                <label className="block mb-2 font-semibold text-gray-700">Precio</label>
                 <input
                     type="number"
                     value={price}
-                    onChange={(e) => setPrice(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el precio"
                     required
-                    min={0}
-                    step="0.01"
                 />
             </div>
             <div className="flex items-center space-x-2">
@@ -41,30 +41,37 @@ const MenuForm: React.FC<{ handleCreate: (menu: Omit<Menu, 'id'>) => void }> = (
                     checked={availability}
                     onChange={(e) => setAvailability(e.target.checked)}
                     id="availability"
+                    className="rounded border-gray-300 text-primary focus:ring-primary"
                 />
-                <label htmlFor="availability" className="font-semibold">Disponibilidad</label>
+                <label htmlFor="availability" className="font-semibold text-gray-700">
+                    Disponible
+                </label>
             </div>
             <div>
-                <label className="block mb-1 font-semibold">ID del Restaurante</label>
+                <label className="block mb-2 font-semibold text-gray-700">ID del Restaurante</label>
                 <input
                     type="number"
                     value={restaurantId}
-                    onChange={(e) => setRestaurantId(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
+                    onChange={(e) => setRestaurantId(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el ID del restaurante"
+                    required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">ID del Producto</label>
+                <label className="block mb-2 font-semibold text-gray-700">ID del Producto</label>
                 <input
                     type="number"
                     value={productId}
-                    onChange={(e) => setProductId(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
+                    onChange={(e) => setProductId(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el ID del producto"
+                    required
                 />
             </div>
             <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="mt-2 w-full rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition"
             >
                 Crear Menú
             </button>
@@ -86,7 +93,7 @@ const CreateMenuPage: React.FC = () => {
                     timer: 3000,
                 });
                 console.log('Menú creado con éxito:', createdMenu);
-                navigate('/menus');
+                navigate('/menu/list');
             } else {
                 Swal.fire({
                     title: 'Error',

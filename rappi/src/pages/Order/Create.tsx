@@ -6,90 +6,99 @@ import Breadcrumb from '../../components/Breadcrumb';
 import { useNavigate } from 'react-router-dom';
 
 const OrderForm: React.FC<{ handleCreate: (order: Omit<Order, 'id'>) => void }> = ({ handleCreate }) => {
-    const [quantity, setQuantity] = useState<number | ''>('');
-    const [totalPrice, setTotalPrice] = useState<number | ''>('');
+    const [quantity, setQuantity] = useState('');
+    const [totalPrice, setTotalPrice] = useState('');
     const [status, setStatus] = useState('');
-    const [customerId, setCustomerId] = useState<number | ''>('');
-    const [menuId, setMenuId] = useState<number | ''>('');
-    const [motorcycleId, setMotorcycleId] = useState<number | ''>('');
+    const [customerId, setCustomerId] = useState('');
+    const [menuId, setMenuId] = useState('');
+    const [motorcycleId, setMotorcycleId] = useState('');
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         handleCreate({
-            quantity: quantity === '' ? undefined : quantity,
-            total_price: totalPrice === '' ? undefined : totalPrice,
+            quantity: quantity ? Number(quantity) : undefined,
+            total_price: totalPrice ? Number(totalPrice) : undefined,
             status,
-            customer_id: customerId === '' ? undefined : customerId,
-            menu_id: menuId === '' ? undefined : menuId,
-            motorcycle_id: motorcycleId === '' ? undefined : motorcycleId,
+            customer_id: customerId ? Number(customerId) : undefined,
+            menu_id: menuId ? Number(menuId) : undefined,
+            motorcycle_id: motorcycleId ? Number(motorcycleId) : undefined,
         });
     };
 
     return (
-        <form onSubmit={onSubmit} className="space-y-4 max-w-md">
+        <form onSubmit={onSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Crear Nuevo Pedido</h3>
             <div>
-                <label className="block mb-1 font-semibold">Cantidad</label>
+                <label className="block mb-2 font-semibold text-gray-700">Cantidad</label>
                 <input
                     type="number"
                     value={quantity}
-                    onChange={(e) => setQuantity(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
-                    min={1}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese la cantidad"
                     required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Precio Total</label>
+                <label className="block mb-2 font-semibold text-gray-700">Precio Total</label>
                 <input
                     type="number"
                     value={totalPrice}
-                    onChange={(e) => setTotalPrice(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
-                    min={0}
-                    step="0.01"
+                    onChange={(e) => setTotalPrice(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el precio total"
+                    required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Estado</label>
+                <label className="block mb-2 font-semibold text-gray-700">Estado</label>
                 <input
                     type="text"
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el estado"
+                    required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">ID del Cliente</label>
+                <label className="block mb-2 font-semibold text-gray-700">ID del Cliente</label>
                 <input
                     type="number"
                     value={customerId}
-                    onChange={(e) => setCustomerId(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
+                    onChange={(e) => setCustomerId(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el ID del cliente"
+                    required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">ID del Menú</label>
+                <label className="block mb-2 font-semibold text-gray-700">ID del Menú</label>
                 <input
                     type="number"
                     value={menuId}
-                    onChange={(e) => setMenuId(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
+                    onChange={(e) => setMenuId(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el ID del menú"
+                    required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">ID de la Motocicleta</label>
+                <label className="block mb-2 font-semibold text-gray-700">ID de la Motocicleta</label>
                 <input
                     type="number"
                     value={motorcycleId}
-                    onChange={(e) => setMotorcycleId(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
+                    onChange={(e) => setMotorcycleId(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el ID de la motocicleta"
+                    required
                 />
             </div>
             <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="mt-2 w-full rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition"
             >
-                Crear Orden
+                Crear Pedido
             </button>
         </form>
     );
@@ -104,16 +113,16 @@ const CreateOrderPage: React.FC = () => {
             if (createdOrder) {
                 Swal.fire({
                     title: 'Completado',
-                    text: 'Se ha creado correctamente la orden',
+                    text: 'Se ha creado correctamente el pedido',
                     icon: 'success',
                     timer: 3000,
                 });
-                console.log('Orden creada con éxito:', createdOrder);
-                navigate('/orders');
+                console.log('Pedido creado con éxito:', createdOrder);
+                navigate('/order/list');
             } else {
                 Swal.fire({
                     title: 'Error',
-                    text: 'Existe un problema al momento de crear la orden',
+                    text: 'Existe un problema al momento de crear el pedido',
                     icon: 'error',
                     timer: 3000,
                 });
@@ -121,7 +130,7 @@ const CreateOrderPage: React.FC = () => {
         } catch (error) {
             Swal.fire({
                 title: 'Error',
-                text: 'Existe un problema al momento de crear la orden',
+                text: 'Existe un problema al momento de crear el pedido',
                 icon: 'error',
                 timer: 3000,
             });
@@ -130,8 +139,8 @@ const CreateOrderPage: React.FC = () => {
 
     return (
         <div>
-            <h2>Crear Orden</h2>
-            <Breadcrumb pageName="Crear Orden" />
+            <h2>Crear Pedido</h2>
+            <Breadcrumb pageName="Crear Pedido" />
             <OrderForm handleCreate={handleCreateOrder} />
         </div>
     );

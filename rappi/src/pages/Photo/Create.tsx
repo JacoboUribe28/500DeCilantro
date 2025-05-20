@@ -9,7 +9,7 @@ const PhotoForm: React.FC<{ handleCreate: (photo: Omit<Photo, 'id'>) => void }> 
     const [imageUrl, setImageUrl] = useState('');
     const [caption, setCaption] = useState('');
     const [takenAt, setTakenAt] = useState('');
-    const [issueId, setIssueId] = useState<number | ''>('');
+    const [issueId, setIssueId] = useState('');
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -17,52 +17,56 @@ const PhotoForm: React.FC<{ handleCreate: (photo: Omit<Photo, 'id'>) => void }> 
             image_url: imageUrl,
             caption,
             taken_at: takenAt ? new Date(takenAt) : undefined,
-            issue_id: issueId === '' ? undefined : issueId,
+            issue_id: issueId ? Number(issueId) : undefined,
         });
     };
 
     return (
-        <form onSubmit={onSubmit} className="space-y-4 max-w-md">
+        <form onSubmit={onSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Crear Nueva Foto</h3>
             <div>
-                <label className="block mb-1 font-semibold">URL de la Imagen</label>
+                <label className="block mb-2 font-semibold text-gray-700">URL de la Imagen</label>
                 <input
-                    type="url"
+                    type="text"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese la URL de la imagen"
                     required
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Descripción</label>
+                <label className="block mb-2 font-semibold text-gray-700">Descripción</label>
                 <input
                     type="text"
                     value={caption}
                     onChange={(e) => setCaption(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese la descripción"
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">Fecha de Toma</label>
+                <label className="block mb-2 font-semibold text-gray-700">Fecha de la Foto</label>
                 <input
                     type="date"
                     value={takenAt}
                     onChange={(e) => setTakenAt(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 />
             </div>
             <div>
-                <label className="block mb-1 font-semibold">ID de la Incidencia</label>
+                <label className="block mb-2 font-semibold text-gray-700">ID del Issue</label>
                 <input
                     type="number"
                     value={issueId}
-                    onChange={(e) => setIssueId(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full border rounded px-3 py-2"
+                    onChange={(e) => setIssueId(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el ID del issue"
                 />
             </div>
             <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="mt-2 w-full rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition"
             >
                 Crear Foto
             </button>
@@ -84,7 +88,7 @@ const CreatePhotoPage: React.FC = () => {
                     timer: 3000,
                 });
                 console.log('Foto creada con éxito:', createdPhoto);
-                navigate('/photos');
+                navigate('/photo/list');
             } else {
                 Swal.fire({
                     title: 'Error',

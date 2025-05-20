@@ -1,11 +1,14 @@
 import { Eye, Edit, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { getAddresses, deleteAddress } from "../../services/addressService";
 import Swal from "sweetalert2";
 import { Address } from "../../models/address";
 
 const ListAddress = () => {
+    const navigate = useNavigate();
+
     // Estado para almacenar los datos del JSON
     const [data, setData] = useState<Address[]>([]);
 
@@ -22,13 +25,11 @@ const ListAddress = () => {
 
     // Funciones para manejar las acciones
     const handleView = (id: number) => {
-        console.log(`Ver registro con ID: ${id}`);
-        // Lógica para ver el registro
+        navigate(`/address/view/${id}`);
     };
 
     const handleEdit = (id: number) => {
-        console.log(`Editar registro con ID: ${id}`);
-        // Lógica para editar el registro
+        navigate(`/address/update/${id}`);
     };
 
     const handleDelete = async (id: number) => {
@@ -68,8 +69,8 @@ const ListAddress = () => {
                     </div>
                     <div className="flex flex-col gap-5.5 p-6.5">
                         <div className="overflow-x-auto">
-                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+                            <table className="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-300">
+                                <thead className="text-xs text-gray-900 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-200">
                                     <tr>
                                         <th scope="col" className="px-6 py-3">Calle</th>
                                         <th scope="col" className="px-6 py-3">Ciudad</th>
@@ -80,7 +81,7 @@ const ListAddress = () => {
                                 </thead>
                                 <tbody>
   {data.map((item) => (
-    <tr key={item.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+    <tr key={item.id} className="odd:bg-gray-100 odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-300">
       <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{item.street}</td>
       <td className="px-6 py-4">{item.city}</td>
       <td className="px-6 py-4">{item.state}</td>
@@ -89,19 +90,22 @@ const ListAddress = () => {
       <td className="px-6 py-4 space-x-2">
         <button
           onClick={() => handleView(item.id ? parseInt(item.id) : 0)}
-          className="text-blue-600 dark:text-blue-500"
+          className="text-green-600 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400"
+          aria-label="Ver dirección"
         >
           <Eye size={20} />
         </button>
         <button
           onClick={() => item.id && handleEdit(parseInt(item.id))}
-          className="text-yellow-600 dark:text-yellow-500"
+          className="text-orange-600 dark:text-orange-500 hover:text-orange-800 dark:hover:text-orange-400"
+          aria-label="Editar dirección"
         >
           <Edit size={20} />
         </button>
         <button
           onClick={() => item.id && handleDelete(parseInt(item.id))}
-          className="text-red-600 dark:text-red-500"
+          className="text-red-600 dark:text-red-500 hover:text-red-800 dark:hover:text-red-400"
+          aria-label="Eliminar dirección"
         >
           <Trash2 size={20} />
         </button>

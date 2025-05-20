@@ -43,6 +43,17 @@ const UpdateRestaurant = lazy(() => import('../pages/Restaurant/Update'));
 const UpdatePhoto = lazy(() => import('../pages/Photo/Update'));
 const UpdateProduct = lazy(() => import('../pages/Product/Update'));
 const UpdateShift = lazy(() => import('../pages/Shift/Update'));
+const viewAddress = lazy(() => import('../pages/Address/View'));
+const viewCustomer = lazy(() => import('../pages/Customer/View'));
+const viewDriver = lazy(() => import('../pages/Driver/View'));
+const viewIssue = lazy(() => import('../pages/Issue/View'));
+const viewMenu = lazy(() => import('../pages/Menu/View'));
+const viewMotorcycle = lazy(() => import('../pages/Motorcycle/View'));
+const viewOrder = lazy(() => import('../pages/Order/View'));
+const viewRestaurant = lazy(() => import('../pages/Restaurant/View'));
+const viewPhoto = lazy(() => import('../pages/Photo/View'));
+const viewProduct = lazy(() => import('../pages/Product/View'));
+const viewShift = lazy(() => import('../pages/Shift/View'));
 
 
 
@@ -53,169 +64,224 @@ const coreRoutes = [
     component: ListUsers,
   },
   {
-    path: '/update-address/:id',
+    path: '/address/update/:id',
     title: 'UpdateAddress',
     component: UpdateAddress,
   },
   {
-    path: '/update-customer/:id',
+    path: '/customer/update/:id',
     title: 'UpdateCustomer',
     component: UpdateCustomer,
   },
   {
-    path: '/update-driver/:id',
+    path: '/driver/update/:id',
     title: 'UpdateDriver',
     component: UpdateDriver,
   },
   {
-    path: '/update-issue/:id',
+    path: '/issue/update/:id',
     title: 'UpdateIssue',
     component: UpdateIssue,
   },
   {
-    path: '/update-menu/:id',
+    path: '/menu/update/:id',
     title: 'UpdateMenu',
     component: UpdateMenu,
   },
   {
-    path: '/update-motorcycle/:id',
+    path: '/motorcycle/update/:id',
     title: 'UpdateMotorcycle',
     component: UpdateMotorcycle,
   },
   {
-    path: '/update-order/:id',
+    path: '/order/update/:id',
     title: 'UpdateOrder',
     component: UpdateOrder,
   },
   {
-    path: '/update-restaurant/:id',
+    path: '/restaurant/update/:id',
     title: 'UpdateRestaurant',
     component: UpdateRestaurant,
   },
   {
-    path: '/update-photo/:id',
+    path: '/photo/update/:id',
     title: 'UpdatePhoto',
     component: UpdatePhoto,
   },
   {
-    path: '/update-product/:id',
+    path: '/product/update/:id',
     title: 'UpdateProduct',
     component: UpdateProduct,
   },
   {
-    path: '/update-shift/:id',
+    path: '/shift/update/:id',
     title: 'UpdateShift',
     component: UpdateShift,
   },
   {
-    path: '/create-address',
+    path: '/address/create',
     title: 'CreateAddress',
     component: CreateAddress,
   },
   {
-    path: '/create-customer',
+    path: '/customer/create',
     title: 'CreateCustomer',
     component: CreateCustomer,
   },
   {
-    path: '/create-driver',
+    path: '/driver/create',
     title: 'CreateDriver',
     component: CreateDriver,
   },
   {
-    path: '/create-issue',
+    path: '/issue/create',
     title: 'CreateIssue',
     component: CreateIssue,
   },
   {
-    path: '/create-menu',
+    path: '/menu/create',
     title: 'CreateMenu',
     component: CreateMenu,
   },
   {
-    path: '/create-motorcycle',
+    path: '/motorcycle/create',
     title: 'CreateMotorcycle',
     component: CreateMotorcycle,
   },
   {
-    path: '/create-order',
+    path: '/order/create',
     title: 'CreateOrder',
     component: CreateOrder,
   },
   {
-    path: '/create-restaurant',
+    path: '/restaurant/create',
     title: 'CreateRestaurant',
     component: CreateRestaurant,
   },
   {
-    path: '/create-photo',
+    path: '/photo/create',
     title: 'CreatePhoto',
     component: CreatePhoto,
   },
   {
-    path: '/create-product',
+    path: '/product/create',
     title: 'CreateProduct',
     component: CreateProduct,
   },
   {
-    path: '/create-shift',
+    path: '/shift/create',
     title: 'CreateShift',
     component: CreateShift,
   },
   {
-    path: '/list-address',
+    path: '/address/list',
     title: 'ListAddress',
     component: ListAddress,
   },
   {
-    path: '/list-customer',
+    path: '/customer/list',
     title: 'ListCustomer',
     component: ListCustomer,
   },
   {
-    path: '/list-driver',
+    path: '/driver/list',
     title: 'ListDriver',
     component: ListDriver,
   },
   {
-    path: '/list-issue',
+    path: '/issue/list',
     title: 'ListIssue',
     component: ListIssue,
   },
   {
-    path: '/list-menu',
+    path: '/menu/list',
     title: 'ListMenu',
     component: ListMenu,
   },
   {
-    path: '/list-motorcycle',
+    path: '/motorcycle/list',
     title: 'ListMotorcycle',
     component: ListMotorcycle,
   },
   {
-    path: '/list-order',
+    path: '/order/list',
     title: 'ListOrder',
     component: ListOrder,
   },
   {
-    path: '/list-restaurant',
+    path: '/restaurant/list',
     title: 'ListRestaurant',
     component: ListRestaurant,
   },
   {
-    path: '/list-photo',
+    path: '/photo/list',
     title: 'ListPhoto',
     component: ListPhoto,
   },
   {
-    path: '/list-product',
+    path: '/product/list',
     title: 'ListProduct',
     component: ListProduct,
   },
   {
-    path: '/list-shift',
+    path: '/shift/list',
     title: 'ListShift',
     component: ListShift,
+  },
+  {
+    path: 'address/view/:id',
+    title: 'viewAddress',
+    component: viewAddress,
+  },
+  {
+    path: 'customer/view/:id',
+    title: 'viewCustomer',
+    component: viewCustomer,
+  },
+  {
+    path: 'driver/view/:id',
+    title: 'viewDriver',
+    component: viewDriver,
+  },
+  {
+    path: 'issue/view/:id',
+    title: 'viewIssue',
+    component: viewIssue,
+  },
+  {
+    path: 'menu/view/:id',
+    title: 'viewMenu',
+    component: viewMenu,
+  },
+  {
+    path: 'motorcycle/view/:id',
+    title: 'viewMotorcycle',
+    component: viewMotorcycle,
+  },
+  {
+    path: 'order/view/:id',
+    title: 'viewOrder',
+    component: viewOrder,
+  },
+  {
+    path: 'restaurant/view/:id',
+    title: 'viewRestaurant',
+    component: viewRestaurant,
+  },
+  {
+    path: 'photo/view/:id',
+    title: 'viewPhoto',
+    component: viewPhoto,
+  },
+  {
+    path: 'product/view/:id',
+    title: 'viewProduct',
+    component: viewProduct,
+  },
+  {
+    path: 'shift/view/:id',
+    title: 'viewShift',
+    component: viewShift,
   },
   {
     path: '/calendar',
