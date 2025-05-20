@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000"); // Ajusta la URL de tu backend
+// Conexión con opción transport para evitar polling (que da problemas)
+const socket = io("http://localhost:5000", {
+  transports: ["websocket"],
+  withCredentials: true,
+});
 
 const Navbar = () => {
   const [notifications, setNotifications] = useState(0);
@@ -11,10 +15,12 @@ const Navbar = () => {
       setNotifications((prev) => prev + 1);
     });
 
+    // Cleanup para evitar fugas
     return () => {
       socket.off("new_notification");
     };
   }, []);
+
   console.log("notificaciones", notifications);
 
   return (
@@ -33,4 +39,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

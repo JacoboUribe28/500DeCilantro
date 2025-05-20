@@ -43,6 +43,7 @@ const UpdateRestaurant = lazy(() => import('../pages/Restaurant/Update'));
 const UpdatePhoto = lazy(() => import('../pages/Photo/Update'));
 const UpdateProduct = lazy(() => import('../pages/Product/Update'));
 const UpdateShift = lazy(() => import('../pages/Shift/Update'));
+<<<<<<< HEAD
 const viewAddress = lazy(() => import('../pages/Address/View'));
 const viewCustomer = lazy(() => import('../pages/Customer/View'));
 const viewDriver = lazy(() => import('../pages/Driver/View'));
@@ -54,10 +55,19 @@ const viewRestaurant = lazy(() => import('../pages/Restaurant/View'));
 const viewPhoto = lazy(() => import('../pages/Photo/View'));
 const viewProduct = lazy(() => import('../pages/Product/View'));
 const viewShift = lazy(() => import('../pages/Shift/View'));
+=======
+const Mapa = lazy(() => import('../pages/map/TrackingPage'));
+
+>>>>>>> ce1296f3d2d5372350e90ac215ac652a3a18fcc3
 
 
 
 const coreRoutes = [
+  {
+  path: '/tracking',
+  title: 'Tracking',
+  component: Mapa,
+},
   {
     path: '/list-users',
     title: 'ListUsers',
