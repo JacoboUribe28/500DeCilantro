@@ -43,10 +43,17 @@ const UpdateRestaurant = lazy(() => import('../pages/Restaurant/Update'));
 const UpdatePhoto = lazy(() => import('../pages/Photo/Update'));
 const UpdateProduct = lazy(() => import('../pages/Product/Update'));
 const UpdateShift = lazy(() => import('../pages/Shift/Update'));
+const Mapa = lazy(() => import('../pages/map/TrackingPage'));
+
 
 
 
 const coreRoutes = [
+  {
+  path: '/tracking',
+  title: 'Tracking',
+  component: Mapa,
+},
   {
     path: '/list-users',
     title: 'ListUsers',
