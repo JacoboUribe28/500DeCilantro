@@ -1,27 +1,26 @@
 import { Product } from "../models/product";
+import api from "../interceptors/axiosInterceptor";
 
-const API_URL = import.meta.env.VITE_API_URL + "/products" || ""; // Reemplaza con la URL real
+const API_URL = import.meta.env.VITE_API_URL + "/products" || "";
 
 // Obtener todos los productos
 export const getProducts = async (): Promise<Product[]> => {
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Error al obtener productos");
-        return await response.json();
+        const response = await api.get<Product[]>(API_URL);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Error al obtener productos", error);
         return [];
     }
 };
 
 // Obtener un producto por ID
-export const getProductById = async (id: number): Promise<Product | null> => {
+export const getProductById = async (id: string): Promise<Product | null> => {
     try {
-        const response = await fetch(`${API_URL}/${id}`);
-        if (!response.ok) throw new Error("Producto no encontrado");
-        return await response.json();
+        const response = await api.get<Product>(`${API_URL}/${id}`);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Producto no encontrado", error);
         return null;
     }
 };
@@ -29,43 +28,32 @@ export const getProductById = async (id: number): Promise<Product | null> => {
 // Crear un nuevo producto
 export const createProduct = async (product: Omit<Product, "id">): Promise<Product | null> => {
     try {
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(product),
-        });
-        if (!response.ok) throw new Error("Error al crear producto");
-        return await response.json();
+        const response = await api.post<Product>(API_URL, product);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Error al crear producto", error);
         return null;
     }
 };
 
 // Actualizar producto
-export const updateProduct = async (id: number, product: Partial<Product>): Promise<Product | null> => {
+export const updateProduct = async (id: string, product: Partial<Product>): Promise<Product | null> => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(product),
-        });
-        if (!response.ok) throw new Error("Error al actualizar producto");
-        return await response.json();
+        const response = await api.put<Product>(`${API_URL}/${id}`, product);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Error al actualizar producto", error);
         return null;
     }
 };
 
 // Eliminar producto
-export const deleteProduct = async (id: number): Promise<boolean> => {
+export const deleteProduct = async (id: string): Promise<boolean> => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        if (!response.ok) throw new Error("Error al eliminar producto");
+        await api.delete(`${API_URL}/${id}`);
         return true;
     } catch (error) {
-        console.error(error);
+        console.error("Error al eliminar producto", error);
         return false;
     }
 };

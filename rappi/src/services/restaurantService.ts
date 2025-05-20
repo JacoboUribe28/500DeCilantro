@@ -1,27 +1,26 @@
 import { Restaurant } from "../models/restaurant";
+import api from "../interceptors/axiosInterceptor";
 
-const API_URL = import.meta.env.VITE_API_URL + "/restaurants" || ""; // Reemplaza con la URL real
+const API_URL = import.meta.env.VITE_API_URL + "/restaurants" || "";
 
 // Obtener todos los restaurantes
 export const getRestaurants = async (): Promise<Restaurant[]> => {
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Error al obtener restaurantes");
-        return await response.json();
+        const response = await api.get<Restaurant[]>(API_URL);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Error al obtener restaurantes", error);
         return [];
     }
 };
 
 // Obtener un restaurante por ID
-export const getRestaurantById = async (id: number): Promise<Restaurant | null> => {
+export const getRestaurantById = async (id: string): Promise<Restaurant | null> => {
     try {
-        const response = await fetch(`${API_URL}/${id}`);
-        if (!response.ok) throw new Error("Restaurante no encontrado");
-        return await response.json();
+        const response = await api.get<Restaurant>(`${API_URL}/${id}`);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Restaurante no encontrado", error);
         return null;
     }
 };
@@ -29,43 +28,32 @@ export const getRestaurantById = async (id: number): Promise<Restaurant | null> 
 // Crear un nuevo restaurante
 export const createRestaurant = async (restaurant: Omit<Restaurant, "id">): Promise<Restaurant | null> => {
     try {
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(restaurant),
-        });
-        if (!response.ok) throw new Error("Error al crear restaurante");
-        return await response.json();
+        const response = await api.post<Restaurant>(API_URL, restaurant);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Error al crear restaurante", error);
         return null;
     }
 };
 
 // Actualizar restaurante
-export const updateRestaurant = async (id: number, restaurant: Partial<Restaurant>): Promise<Restaurant | null> => {
+export const updateRestaurant = async (id: string, restaurant: Partial<Restaurant>): Promise<Restaurant | null> => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(restaurant),
-        });
-        if (!response.ok) throw new Error("Error al actualizar restaurante");
-        return await response.json();
+        const response = await api.put<Restaurant>(`${API_URL}/${id}`, restaurant);
+        return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("Error al actualizar restaurante", error);
         return null;
     }
 };
 
 // Eliminar restaurante
-export const deleteRestaurant = async (id: number): Promise<boolean> => {
+export const deleteRestaurant = async (id: string): Promise<boolean> => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        if (!response.ok) throw new Error("Error al eliminar restaurante");
+        await api.delete(`${API_URL}/${id}`);
         return true;
     } catch (error) {
-        console.error(error);
+        console.error("Error al eliminar restaurante", error);
         return false;
     }
 };

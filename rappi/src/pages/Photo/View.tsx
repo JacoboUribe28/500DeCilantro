@@ -41,7 +41,7 @@ const ViewPhotoPage: React.FC = () => {
                 <Breadcrumb pageName="Ver Foto" />
                 <p className="text-red-700 font-semibold">{error}</p>
                 <button
-                    onClick={() => navigate('/photo')}
+                    onClick={() => navigate('/photo/list')}
                     className="mt-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-2 rounded shadow-md transition duration-300"
                 >
                     Volver a la lista

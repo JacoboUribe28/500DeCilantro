@@ -24,7 +24,7 @@ const Navbar = () => {
   console.log("notificaciones", notifications);
 
   return (
-    <nav className="p-4 bg-blue-600 text-white flex justify-between">
+    <nav className="p-4 bg-blue-600 text-black flex justify-between">
       <div className="relative">
         <button className="relative">
           🔔 Notificaciones
