@@ -12,15 +12,15 @@ const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
 const ListUsers= lazy(() => import('../pages/Users/page'))
 const ListAddress = lazy(() => import('../pages/Address/ListAddress'));
 const ListCustomer = lazy(() => import('../pages/Customer/ListCustomer'));
-const ListDriver = lazy(() => import('../pages/Driver/ListDriver'));
-const ListIssue = lazy(() => import('../pages/Issue/ListIssue'));
-const ListMenu = lazy(() => import('../pages/Menu/ListMenu'));
-const ListMotorcycle = lazy(() => import('../pages/Motorcycle/ListMotorcycle'));
-const ListOrder = lazy(() => import('../pages/Order/ListOrder'));
-const ListRestaurant = lazy(() => import('../pages/Restaurant/ListRestaurant'));
-const ListPhoto = lazy(() => import('../pages/Photo/ListPhoto'));
-const ListProduct = lazy(() => import('../pages/Product/ListProduct'));
-const ListShift = lazy(() => import('../pages/Shift/ListShift'));
+const ListDriver = lazy(() => import('../pages/Driver/listDriver'));
+const ListIssue = lazy(() => import('../pages/Issue/listIssue'));
+const ListMenu = lazy(() => import('../pages/Menu/listMenu'));
+const ListMotorcycle = lazy(() => import('../pages/Motorcycle/listMotorcycle'));
+const ListOrder = lazy(() => import('../pages/Order/listOrder'));
+const ListRestaurant = lazy(() => import('../pages/Restaurant/listRestaurant'));
+const ListPhoto = lazy(() => import('../pages/Photo/listPhoto'));
+const ListProduct = lazy(() => import('../pages/Product/listProduct'));
+const ListShift = lazy(() => import('../pages/Shift/listShift'));
 const CreateAddress = lazy(() => import('../pages/Address/Create'));
 const CreateCustomer = lazy(() => import('../pages/Customer/Create'));
 const CreateDriver = lazy(() => import('../pages/Driver/Create'));
@@ -43,7 +43,6 @@ const UpdateRestaurant = lazy(() => import('../pages/Restaurant/Update'));
 const UpdatePhoto = lazy(() => import('../pages/Photo/Update'));
 const UpdateProduct = lazy(() => import('../pages/Product/Update'));
 const UpdateShift = lazy(() => import('../pages/Shift/Update'));
-<<<<<<< HEAD
 const viewAddress = lazy(() => import('../pages/Address/View'));
 const viewCustomer = lazy(() => import('../pages/Customer/View'));
 const viewDriver = lazy(() => import('../pages/Driver/View'));
@@ -55,10 +54,7 @@ const viewRestaurant = lazy(() => import('../pages/Restaurant/View'));
 const viewPhoto = lazy(() => import('../pages/Photo/View'));
 const viewProduct = lazy(() => import('../pages/Product/View'));
 const viewShift = lazy(() => import('../pages/Shift/View'));
-=======
 const Mapa = lazy(() => import('../pages/map/TrackingPage'));
-
->>>>>>> ce1296f3d2d5372350e90ac215ac652a3a18fcc3
 
 
 

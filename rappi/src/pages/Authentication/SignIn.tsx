@@ -111,7 +111,7 @@ const SignIn = () => {
                   <input
                     type="email"
                     placeholder="tu@email.com"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-700 bg-gray-800 text-black placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
                   />
                 </div>
 
@@ -122,7 +122,7 @@ const SignIn = () => {
                   <input
                     type="password"
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-700 bg-gray-800 text-black placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
                   />
                 </div>
 
