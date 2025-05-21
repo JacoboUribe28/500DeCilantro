@@ -1,95 +1,148 @@
-import React from "react";
-import { Motorcycle } from "../../models/motorcycle";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { Component } from "react";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
+import { Motorcycle } from "../../models/motorcycle";
 
-// Definimos la interfaz para los props
-interface MotorcycleFormProps {
-    mode: number; // Puede ser 1 (crear) o 2 (actualizar)
-    handleCreate?: (values: Motorcycle) => void;
-    handleUpdate?: (values: Motorcycle) => void;
-    motorcycle?: Motorcycle | null;
+interface MotorcycleFormValidateProps {
+  mode: number; // 1 = create, 2 = update
+  handleCreate?: (values: Motorcycle) => void;
+  handleUpdate?: (values: Motorcycle) => void;
+  motorcycle?: Motorcycle | null;
 }
 
-const MotorcycleFormValidate: React.FC<MotorcycleFormProps> = ({ mode, handleCreate, handleUpdate, motorcycle }) => {
+interface MotorcycleFormValidateState {}
 
-    const handleSubmit = (formattedValues: Motorcycle) => {
-        if (mode === 1 && handleCreate) {
-            handleCreate(formattedValues);  // Si `handleCreate` está definido, lo llamamos
-        } else if (mode === 2 && handleUpdate) {
-            handleUpdate(formattedValues);  // Si `handleUpdate` está definido, lo llamamos
-        } else {
-            console.error('No se proporcionó función para el modo actual');
-        }
+class MotorcycleFormValidate extends Component<MotorcycleFormValidateProps, MotorcycleFormValidateState> {
+  validationSchema = Yup.object({
+    license_plate: Yup.string().required("La placa es obligatoria"),
+    brand: Yup.string().required("La marca es obligatoria"),
+    year: Yup.number()
+      .typeError("El año debe ser un número")
+      .required("El año es obligatorio")
+      .min(1900, "El año no puede ser menor a 1900")
+      .max(new Date().getFullYear(), "El año no puede ser mayor al año actual"),
+    status: Yup.string().required("El estado es obligatorio"),
+  });
+
+  handleSubmit = (values: Motorcycle, actions: FormikHelpers<Motorcycle>) => {
+    console.log("Valores enviados:", values);
+
+    if (this.props.mode === 1 && this.props.handleCreate) {
+      this.props.handleCreate(values);
+    } else if (this.props.mode === 2 && this.props.handleUpdate) {
+      this.props.handleUpdate(values);
+    } else {
+      console.error("No se proporcionó función para el modo actual");
+    }
+    actions.setSubmitting(false);
+  };
+
+  render() {
+    const initialValues: Motorcycle = this.props.motorcycle || {
+      id: "",
+      license_plate: "",
+      brand: "",
+      year: undefined,
+      status: "",
     };
 
+    const mode = this.props.mode === 1 ? "Crear" : "Actualizar";
+
     return (
-        <Formik
-            initialValues={motorcycle ? motorcycle : {
-                license_plate: "",
-                brand: "",
-                year: "",
-                status: "",
-            }}
-            validationSchema={Yup.object({
-                license_plate: Yup.string().required("La placa es obligatoria"),
-                brand: Yup.string().required("La marca es obligatoria"),
-                year: Yup.number()
-                    .typeError("Debe ser un número")
-                    .integer("Debe ser un número entero")
-                    .positive("Debe ser un número positivo")
-                    .required("El año es obligatorio"),
-                status: Yup.string().required("El estado es obligatorio"),
-            })}
-            onSubmit={(values) => {
-                const formattedValues = {
-                    ...values,
-                    year: Number(values.year),
-                };
-                handleSubmit(formattedValues);
-            }}
-        >
-            {({ handleSubmit }) => (
-                <Form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 p-6 bg-white rounded-md shadow-md">
-                    {/* Placa */}
-                    <div>
-                        <label htmlFor="license_plate" className="block text-lg font-medium text-gray-700">Placa</label>
-                        <Field type="text" name="license_plate" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="license_plate" component="p" className="text-red-500 text-sm" />
-                    </div>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={this.validationSchema}
+        onSubmit={this.handleSubmit}
+        enableReinitialize
+      >
+        {({ isSubmitting, errors, touched }) => (
+          <Form className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+              {mode} Motocicleta
+            </h3>
 
-                    {/* Marca */}
-                    <div>
-                        <label htmlFor="brand" className="block text-lg font-medium text-gray-700">Marca</label>
-                        <Field type="text" name="brand" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="brand" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Placa</label>
+              <Field
+                type="text"
+                name="license_plate"
+                className={`w-full border ${
+                  errors.license_plate && touched.license_plate ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese la placa"
+              />
+              <ErrorMessage
+                name="license_plate"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Año */}
-                    <div>
-                        <label htmlFor="year" className="block text-lg font-medium text-gray-700">Año</label>
-                        <Field type="number" name="year" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="year" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Marca</label>
+              <Field
+                type="text"
+                name="brand"
+                className={`w-full border ${
+                  errors.brand && touched.brand ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese la marca"
+              />
+              <ErrorMessage
+                name="brand"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Estado */}
-                    <div>
-                        <label htmlFor="status" className="block text-lg font-medium text-gray-700">Estado</label>
-                        <Field type="text" name="status" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="status" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Año</label>
+              <Field
+                type="number"
+                name="year"
+                className={`w-full border ${
+                  errors.year && touched.year ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el año"
+                min="1900"
+                max={new Date().getFullYear()}
+              />
+              <ErrorMessage
+                name="year"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Botón de enviar */}
-                    <button
-                        type="submit"
-                        className={`py-2 px-4 text-white rounded-md ${mode === 1 ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"}`}
-                    >
-                        {mode === 1 ? "Crear" : "Actualizar"}
-                    </button>
-                </Form>
-            )}
-        </Formik>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Estado</label>
+              <Field
+                type="text"
+                name="status"
+                className={`w-full border ${
+                  errors.status && touched.status ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el estado"
+              />
+              <ErrorMessage
+                name="status"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-2 w-full rounded bg-blue-600 px-4 py-2 text-sm font-medium text-black hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              {isSubmitting ? "Procesando..." : `${mode} Motocicleta`}
+            </button>
+          </Form>
+        )}
+      </Formik>
     );
-};
+  }
+}
 
 export default MotorcycleFormValidate;

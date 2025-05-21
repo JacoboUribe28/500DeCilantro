@@ -1,115 +1,30 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { Order } from '../../models/order';
 import { createOrder } from '../../services/orderService';
 import Swal from 'sweetalert2';
 import Breadcrumb from '../../components/Breadcrumb';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, Params, Location } from 'react-router-dom';
+import OrderFormValidate from '../../components/Orders/OrderFormValidate';
 
-const OrderForm: React.FC<{ handleCreate: (order: Omit<Order, 'id'>) => void }> = ({ handleCreate }) => {
-    const [quantity, setQuantity] = useState('');
-    const [totalPrice, setTotalPrice] = useState('');
-    const [status, setStatus] = useState('');
-    const [customerId, setCustomerId] = useState('');
-    const [menuId, setMenuId] = useState('');
-    const [motorcycleId, setMotorcycleId] = useState('');
+interface CreateOrderPageProps {
+    navigate: NavigateFunction;
+    params: Readonly<Params<string>>;
+    location: Location;
+}
 
-    const onSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        handleCreate({
-            quantity: quantity ? Number(quantity) : undefined,
-            total_price: totalPrice ? Number(totalPrice) : undefined,
-            status,
-            customer_id: customerId ? Number(customerId) : undefined,
-            menu_id: menuId ? Number(menuId) : undefined,
-            motorcycle_id: motorcycleId ? Number(motorcycleId) : undefined,
-        });
-    };
+interface CreateOrderPageState {}
 
-    return (
-        <form onSubmit={onSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Crear Nuevo Pedido</h3>
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">Cantidad</label>
-                <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="Ingrese la cantidad"
-                    required
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">Precio Total</label>
-                <input
-                    type="number"
-                    value={totalPrice}
-                    onChange={(e) => setTotalPrice(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="Ingrese el precio total"
-                    required
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">Estado</label>
-                <input
-                    type="text"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="Ingrese el estado"
-                    required
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">ID del Cliente</label>
-                <input
-                    type="number"
-                    value={customerId}
-                    onChange={(e) => setCustomerId(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="Ingrese el ID del cliente"
-                    required
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">ID del Menú</label>
-                <input
-                    type="number"
-                    value={menuId}
-                    onChange={(e) => setMenuId(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="Ingrese el ID del menú"
-                    required
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">ID de la Motocicleta</label>
-                <input
-                    type="number"
-                    value={motorcycleId}
-                    onChange={(e) => setMotorcycleId(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="Ingrese el ID de la motocicleta"
-                    required
-                />
-            </div>
-            <button
-                type="submit"
-                className="mt-2 w-full rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition"
-            >
-                Crear Pedido
-            </button>
-        </form>
-    );
-};
+class CreateOrderPage extends Component<CreateOrderPageProps, CreateOrderPageState> {
+    constructor(props: CreateOrderPageProps) {
+        super(props);
+    }
 
-const CreateOrderPage: React.FC = () => {
-    const navigate = useNavigate();
-
-    const handleCreateOrder = async (order: Omit<Order, 'id'>) => {
+    handleCreateOrder = async (order: Order) => {
         try {
-            const createdOrder = await createOrder(order);
+            // Omitimos el ID que viene del formulario ya que se genera en el backend
+            const { id, ...orderData } = order;
+            const createdOrder = await createOrder(orderData);
+            
             if (createdOrder) {
                 Swal.fire({
                     title: 'Completado',
@@ -121,7 +36,7 @@ const CreateOrderPage: React.FC = () => {
                     }
                 });
                 console.log('Pedido creado con éxito:', createdOrder);
-                navigate('/order/list');
+                this.props.navigate('/order/list');
             } else {
                 Swal.fire({
                     title: 'Error',
@@ -140,19 +55,37 @@ const CreateOrderPage: React.FC = () => {
                 icon: 'error',
                 timer: 3000,
                 customClass:{
-                        confirmButton: 'text-black'
-                    }
+                    confirmButton: 'text-black'
+                }
             });
         }
     };
 
-    return (
-        <div>
-            <h2>Crear Pedido</h2>
-            <Breadcrumb pageName="Crear Pedido" />
-            <OrderForm handleCreate={handleCreateOrder} />
-        </div>
-    );
-};
+    render() {
+        return (
+            <div>
+                <h2>Crear Pedido</h2>
+                <Breadcrumb pageName="Crear Pedido" />
+                <OrderFormValidate 
+                    mode={1} // 1 = Modo creación
+                    handleCreate={this.handleCreateOrder}
+                />
+            </div>
+        );
+    }
+}
 
-export default CreateOrderPage;
+// Since react-router-dom v6 does not have withRouter, we create a wrapper to inject navigate
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+
+function withRouter(Component: any) {
+    function ComponentWithRouterProp(props: any) {
+        let navigate = useNavigate();
+        let params = useParams();
+        let location = useLocation();
+        return <Component {...props} navigate={navigate} params={params} location={location} />;
+    }
+    return ComponentWithRouterProp;
+}
+
+export default withRouter(CreateOrderPage);

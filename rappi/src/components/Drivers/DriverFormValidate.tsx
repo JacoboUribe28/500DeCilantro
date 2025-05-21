@@ -1,98 +1,161 @@
-import React from "react";
-import { Driver } from "../../models/driver";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { Component } from "react";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
+import { Driver } from "../../models/driver";
 
-// Definimos la interfaz para los props
-interface DriverFormProps {
-    mode: number; // Puede ser 1 (crear) o 2 (actualizar)
-    handleCreate?: (values: Driver) => void;
-    handleUpdate?: (values: Driver) => void;
-    driver?: Driver | null;
+interface DriverFormValidateProps {
+  mode: number; // 1 = create, 2 = update
+  handleCreate?: (values: Driver) => void;
+  handleUpdate?: (values: Driver) => void;
+  driver?: Driver | null;
 }
 
-const DriverFormValidate: React.FC<DriverFormProps> = ({ mode, handleCreate, handleUpdate, driver }) => {
+interface DriverFormValidateState {}
 
-    const handleSubmit = (formattedValues: Driver) => {
-        if (mode === 1 && handleCreate) {
-            handleCreate(formattedValues);  // Si `handleCreate` está definido, lo llamamos
-        } else if (mode === 2 && handleUpdate) {
-            handleUpdate(formattedValues);  // Si `handleUpdate` está definido, lo llamamos
-        } else {
-            console.error('No se proporcionó función para el modo actual');
-        }
+class DriverFormValidate extends Component<DriverFormValidateProps, DriverFormValidateState> {
+  validationSchema = Yup.object({
+    name: Yup.string().required("El nombre es obligatorio"),
+    license_number: Yup.string().required("El número de licencia es obligatorio"),
+    email: Yup.string().email("El correo electrónico no es válido").required("El correo electrónico es obligatorio"),
+    phone: Yup.string().required("El teléfono es obligatorio"),
+    status: Yup.string().required("El estado es obligatorio"),
+  });
+
+  handleSubmit = (values: Driver, actions: FormikHelpers<Driver>) => {
+    console.log("Valores enviados:", values);
+
+    if (this.props.mode === 1 && this.props.handleCreate) {
+      this.props.handleCreate(values);
+    } else if (this.props.mode === 2 && this.props.handleUpdate) {
+      this.props.handleUpdate(values);
+    } else {
+      console.error("No se proporcionó función para el modo actual");
+    }
+    actions.setSubmitting(false);
+  };
+
+  render() {
+    const initialValues: Driver = this.props.driver || {
+      id: "",
+      name: "",
+      license_number: "",
+      email: "",
+      phone: "",
+      status: "",
     };
 
+    const mode = this.props.mode === 1 ? "Crear" : "Actualizar";
+
     return (
-        <Formik
-            initialValues={driver ? driver : {
-                name: "",
-                license_number: "",
-                email: "",
-                phone: "",
-                status: "",
-            }}
-            validationSchema={Yup.object({
-                name: Yup.string().required("El nombre es obligatorio"),
-                license_number: Yup.string().required("El número de licencia es obligatorio"),
-                email: Yup.string().email("Email inválido").required("El email es obligatorio"),
-                phone: Yup.string()
-                    .matches(/^\d{10}$/, "El teléfono debe tener 10 dígitos")
-                    .required("El teléfono es obligatorio"),
-                status: Yup.string().required("El estado es obligatorio"),
-            })}
-            onSubmit={(values) => {
-                handleSubmit(values);
-            }}
-        >
-            {({ handleSubmit }) => (
-                <Form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 p-6 bg-white rounded-md shadow-md">
-                    {/* Nombre */}
-                    <div>
-                        <label htmlFor="name" className="block text-lg font-medium text-gray-700">Nombre</label>
-                        <Field type="text" name="name" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="name" component="p" className="text-red-500 text-sm" />
-                    </div>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={this.validationSchema}
+        onSubmit={this.handleSubmit}
+        enableReinitialize
+      >
+        {({ isSubmitting, errors, touched }) => (
+          <Form className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+              {mode} Conductor
+            </h3>
 
-                    {/* Número de licencia */}
-                    <div>
-                        <label htmlFor="license_number" className="block text-lg font-medium text-gray-700">Número de licencia</label>
-                        <Field type="text" name="license_number" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="license_number" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Nombre</label>
+              <Field
+                type="text"
+                name="name"
+                className={`w-full border ${
+                  errors.name && touched.name ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el nombre"
+              />
+              <ErrorMessage
+                name="name"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Email */}
-                    <div>
-                        <label htmlFor="email" className="block text-lg font-medium text-gray-700">Correo electrónico</label>
-                        <Field type="email" name="email" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="email" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Número de Licencia</label>
+              <Field
+                type="text"
+                name="license_number"
+                className={`w-full border ${
+                  errors.license_number && touched.license_number ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el número de licencia"
+              />
+              <ErrorMessage
+                name="license_number"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Teléfono */}
-                    <div>
-                        <label htmlFor="phone" className="block text-lg font-medium text-gray-700">Teléfono</label>
-                        <Field type="text" name="phone" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="phone" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Correo Electrónico</label>
+              <Field
+                type="email"
+                name="email"
+                className={`w-full border ${
+                  errors.email && touched.email ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el correo electrónico"
+              />
+              <ErrorMessage
+                name="email"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Estado */}
-                    <div>
-                        <label htmlFor="status" className="block text-lg font-medium text-gray-700">Estado</label>
-                        <Field type="text" name="status" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="status" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Teléfono</label>
+              <Field
+                type="text"
+                name="phone"
+                className={`w-full border ${
+                  errors.phone && touched.phone ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el teléfono"
+              />
+              <ErrorMessage
+                name="phone"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Botón de enviar */}
-                    <button
-                        type="submit"
-                        className={`py-2 px-4 text-white rounded-md ${mode === 1 ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"}`}
-                    >
-                        {mode === 1 ? "Crear" : "Actualizar"}
-                    </button>
-                </Form>
-            )}
-        </Formik>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Estado</label>
+              <Field
+                type="text"
+                name="status"
+                className={`w-full border ${
+                  errors.status && touched.status ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el estado"
+              />
+              <ErrorMessage
+                name="status"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-2 w-full rounded bg-blue-600 px-4 py-2 text-sm font-medium text-black hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              {isSubmitting ? "Procesando..." : `${mode} Conductor`}
+            </button>
+          </Form>
+        )}
+      </Formik>
     );
-};
+  }
+}
 
 export default DriverFormValidate;

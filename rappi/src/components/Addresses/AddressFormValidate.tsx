@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { Address } from "../../models/address";
+import ReferenceSelect from "../ReferenceSelector";
 
 interface AddressFormValidateProps {
   mode: number; // 1 = create, 2 = update
@@ -21,10 +22,12 @@ class AddressFormValidate extends Component<AddressFormValidateProps, AddressFor
       .matches(/^\d{5}$/, "El código postal debe tener 5 dígitos")
       .required("El código postal es obligatorio"),
     additional_info: Yup.string(),
-    order_id: Yup.string(),
+    order_id: Yup.string().required("El ID del pedido es obligatorio")
   });
 
   handleSubmit = (values: Address, actions: FormikHelpers<Address>) => {
+    console.log("Valores enviados:", values);
+    
     if (this.props.mode === 1 && this.props.handleCreate) {
       this.props.handleCreate(values);
     } else if (this.props.mode === 2 && this.props.handleUpdate) {
@@ -37,6 +40,7 @@ class AddressFormValidate extends Component<AddressFormValidateProps, AddressFor
 
   render() {
     const initialValues: Address = this.props.address || {
+      id: "",
       street: "",
       city: "",
       state: "",
@@ -45,65 +49,136 @@ class AddressFormValidate extends Component<AddressFormValidateProps, AddressFor
       order_id: "",
     };
 
+    const mode = this.props.mode === 1 ? "Crear" : "Actualizar";
+
     return (
       <Formik
         initialValues={initialValues}
         validationSchema={this.validationSchema}
         onSubmit={this.handleSubmit}
+        enableReinitialize
       >
-        {( { handleSubmit, isSubmitting }: { handleSubmit: React.FormEventHandler<HTMLFormElement>; isSubmitting: boolean } ) => (
-          <Form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 p-6 bg-white rounded-md shadow-md">
-            {/* Calle */}
+        {({ isSubmitting, errors, touched, values }) => (
+          <Form className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+              {mode} Dirección
+            </h3>
+            
             <div>
-              <label htmlFor="street" className="block text-lg font-medium text-gray-700">Calle</label>
-              <Field type="text" name="street" className="w-full border rounded-md p-2" />
-              <ErrorMessage name="street" component="p" className="text-red-500 text-sm" />
+              <label className="block mb-2 font-semibold text-gray-700">Calle</label>
+              <Field
+                type="text"
+                name="street"
+                className={`w-full border ${
+                  errors.street && touched.street ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese la calle"
+              />
+              <ErrorMessage
+                name="street"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
             </div>
-
-            {/* Ciudad */}
+            
             <div>
-              <label htmlFor="city" className="block text-lg font-medium text-gray-700">Ciudad</label>
-              <Field type="text" name="city" className="w-full border rounded-md p-2" />
-              <ErrorMessage name="city" component="p" className="text-red-500 text-sm" />
+              <label className="block mb-2 font-semibold text-gray-700">Ciudad</label>
+              <Field
+                type="text"
+                name="city"
+                className={`w-full border ${
+                  errors.city && touched.city ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese la ciudad"
+              />
+              <ErrorMessage
+                name="city"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
             </div>
-
-            {/* Estado */}
+            
             <div>
-              <label htmlFor="state" className="block text-lg font-medium text-gray-700">Estado</label>
-              <Field type="text" name="state" className="w-full border rounded-md p-2" />
-              <ErrorMessage name="state" component="p" className="text-red-500 text-sm" />
+              <label className="block mb-2 font-semibold text-gray-700">Estado</label>
+              <Field
+                type="text"
+                name="state"
+                className={`w-full border ${
+                  errors.state && touched.state ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el estado"
+              />
+              <ErrorMessage
+                name="state"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
             </div>
-
-            {/* Código Postal */}
+            
             <div>
-              <label htmlFor="postal_code" className="block text-lg font-medium text-gray-700">Código Postal</label>
-              <Field type="text" name="postal_code" className="w-full border rounded-md p-2" />
-              <ErrorMessage name="postal_code" component="p" className="text-red-500 text-sm" />
+              <label className="block mb-2 font-semibold text-gray-700">Código Postal</label>
+              <Field
+                type="text"
+                name="postal_code"
+                className={`w-full border ${
+                  errors.postal_code && touched.postal_code ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el código postal"
+              />
+              <ErrorMessage
+                name="postal_code"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
             </div>
-
-            {/* Información Adicional */}
+            
             <div>
-              <label htmlFor="additional_info" className="block text-lg font-medium text-gray-700">Información Adicional</label>
-              <Field as="textarea" name="additional_info" className="w-full border rounded-md p-2" />
-              <ErrorMessage name="additional_info" component="p" className="text-red-500 text-sm" />
+              <label className="block mb-2 font-semibold text-gray-700">Información Adicional</label>
+              <Field
+                as="textarea"
+                name="additional_info"
+                className={`w-full border ${
+                  errors.additional_info && touched.additional_info ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese información adicional"
+                rows={3}
+              />
+              <ErrorMessage
+                name="additional_info"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
             </div>
-
-            {/* ID de Pedido */}
+            
             <div>
-              <label htmlFor="order_id" className="block text-lg font-medium text-gray-700">ID de Pedido</label>
-              <Field type="text" name="order_id" className="w-full border rounded-md p-2" />
-              <ErrorMessage name="order_id" component="p" className="text-red-500 text-sm" />
+              <label className="block mb-2 font-semibold text-gray-700">ID de Pedido</label>
+              <ReferenceSelect
+                name="order_id"
+                model="order"
+                valueKey="id"
+                labelKey="id" // Usamos el ID como etiqueta
+                className={`w-full border ${
+                  errors.order_id && touched.order_id ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+              />
+              <ErrorMessage
+                name="order_id"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
             </div>
-
-            {/* Botón de enviar */}
+            
+            {/* Mostramos el valor seleccionado para facilitar la depuración */}
+            <div className="text-sm text-gray-600">
+              Orden seleccionada: {values.order_id || "Ninguna"}
+            </div>
+            
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`py-2 px-4 text-white rounded-md ${
-                this.props.mode === 1 ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
-              }`}
+              className="mt-2 w-full rounded bg-blue-600 px-4 py-2 text-sm font-medium text-black hover:bg-blue-700 transition disabled:opacity-50"
             >
-              {this.props.mode === 1 ? "Crear" : "Actualizar"}
+              {isSubmitting ? "Procesando..." : `${mode} Dirección`}
             </button>
           </Form>
         )}

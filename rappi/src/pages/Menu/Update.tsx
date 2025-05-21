@@ -1,75 +1,82 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-
-import { getMenuById, updateMenu } from "../../services/menuService";
-import Swal from "sweetalert2";
-
+import React, { Component } from 'react';
 import { Menu } from '../../models/menu';
-import Breadcrumb from "../../components/Breadcrumb";
+import { getMenuById, updateMenu } from '../../services/menuService';
+import Swal from 'sweetalert2';
+import Breadcrumb from '../../components/Breadcrumb';
+import { NavigateFunction, Params, Location } from 'react-router-dom';
+import MenuFormValidate from '../../components/Menus/MenuFormValidate';
 
-const UpdateMenuPage = () => {
-    const { id } = useParams<{ id: string }>(); // Obtener el ID de la URL
-    
-    const navigate = useNavigate();
-    const [menu, setMenu] = useState<Menu | null>(null);
+interface UpdateMenuPageProps {
+    navigate: NavigateFunction;
+    params: Readonly<Params<string>>;
+    location: Location;
+}
 
-    useEffect(() => {
-        const fetchMenu = async () => {
-            if (!id) return;
-            const menuData = await getMenuById(parseInt(id));
-            setMenu(menuData);
+interface UpdateMenuPageState {
+    menu: Menu | null;
+    loading: boolean;
+    error: string | null;
+}
+
+class UpdateMenuPage extends Component<UpdateMenuPageProps, UpdateMenuPageState> {
+    constructor(props: UpdateMenuPageProps) {
+        super(props);
+        this.state = {
+            menu: null,
+            loading: true,
+            error: null
         };
+    }
 
-        fetchMenu();
-    }, [id]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
-        setMenu(prev => {
-            if (!prev) return prev;
-            let newValue: any = value;
-            if (type === "number") {
-                newValue = value === "" ? "" : Number(value);
-            } else if (type === "checkbox") {
-                newValue = checked;
-            }
-            return { ...prev, [name]: newValue };
-        });
-    };
-
-    const handleUpdateMenu = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!menu || !menu.id) {
-            Swal.fire({
-                title: "Error",
-                text: "Menú no cargado correctamente.",
-                icon: "error",
-                timer: 3000,
-                customClass:{
-                        confirmButton: 'text-black'
-                    }
-            });
-            return;
-        }
-
+    async componentDidMount() {
         try {
-            const updated = await updateMenu(parseInt(menu.id), menu);
-            if (updated) {
+            const { id } = this.props.params;
+            if (!id) {
+                this.setState({ 
+                    loading: false, 
+                    error: 'No se proporcionó un ID de menú' 
+                });
+                return;
+            }
+
+            const menu = await getMenuById(id);
+            if (menu) {
+                this.setState({ menu, loading: false });
+            } else {
+                this.setState({ 
+                    loading: false, 
+                    error: 'No se encontró el menú con el ID proporcionado' 
+                });
+            }
+        } catch (error) {
+            this.setState({ 
+                loading: false, 
+                error: 'Error al cargar los datos del menú' 
+            });
+        }
+    }
+
+    handleUpdateMenu = async (menu: Menu) => {
+        try {
+            const updatedMenu = await updateMenu(menu.id || '', menu);
+            
+            if (updatedMenu) {
                 Swal.fire({
-                    title: "Completado",
-                    text: "Se ha actualizado correctamente el menú",
-                    icon: "success",
+                    title: 'Completado',
+                    text: 'Se ha actualizado correctamente el menú',
+                    icon: 'success',
                     timer: 3000,
                     customClass:{
                         confirmButton: 'text-black'
                     }
                 });
-                navigate("/menu/list");
+                console.log('Menú actualizado con éxito:', updatedMenu);
+                this.props.navigate('/menu/list');
             } else {
                 Swal.fire({
-                    title: "Error",
-                    text: "Existe un problema al momento de actualizar el menú",
-                    icon: "error",
+                    title: 'Error',
+                    text: 'Existe un problema al momento de actualizar el menú',
+                    icon: 'error',
                     timer: 3000,
                     customClass:{
                         confirmButton: 'text-black'
@@ -78,104 +85,62 @@ const UpdateMenuPage = () => {
             }
         } catch (error) {
             Swal.fire({
-                title: "Error",
-                text: "Existe un problema al momento de actualizar el menú",
-                icon: "error",
+                title: 'Error',
+                text: 'Existe un problema al momento de actualizar el menú',
+                icon: 'error',
                 timer: 3000,
                 customClass:{
-                        confirmButton: 'text-black'
-                    }
+                    confirmButton: 'text-black'
+                }
             });
         }
     };
 
-    if (!menu) {
-        return <div>Cargando...</div>;
-    }
+    render() {
+        const { menu, loading, error } = this.state;
 
-    return (
-        <>
-            <Breadcrumb pageName="Actualizar Menú" />
-            <div className="flex flex-col gap-9 bg-blue-100">
-                <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-6.5">
-                    <h3 className="font-medium text-black dark:text-white mb-6 text-lg">
-                        Actualizar Menú
-                    </h3>
-                    <form onSubmit={handleUpdateMenu} className="flex flex-col gap-6">
-                        <div className="flex flex-col">
-                            <label htmlFor="price" className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Precio:
-                            </label>
-                            <input
-                                type="number"
-                                id="price"
-                                name="price"
-                                value={menu.price !== undefined ? menu.price : ''}
-                                onChange={handleChange}
-                                required
-                                step="0.01"
-                                className="rounded border border-gray-300 bg-gray-50 px-4 py-2 text-gray-900 focus:border-primary focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary dark:focus:ring-primary"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="availbality" className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Disponibilidad:
-                            </label>
-                            <input
-                                type="checkbox"
-                                id="availbality"
-                                name="availbality"
-                                checked={menu.availbality || false}
-                                onChange={handleChange}
-                                className="rounded focus:ring-primary dark:focus:ring-primary"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="restaurant_id" className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                ID de Restaurante:
-                            </label>
-                            <input
-                                type="number"
-                                id="restaurant_id"
-                                name="restaurant_id"
-                                value={menu.restaurant_id !== undefined ? menu.restaurant_id : ''}
-                                onChange={handleChange}
-                                required
-                                className="rounded border border-gray-300 bg-gray-50 px-4 py-2 text-gray-900 focus:border-primary focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary dark:focus:ring-primary"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="product_id" className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                ID de Producto:
-                            </label>
-                            <input
-                                type="number"
-                                id="product_id"
-                                name="product_id"
-                                value={menu.product_id !== undefined ? menu.product_id : ''}
-                                onChange={handleChange}
-                                required
-                                className="rounded border border-gray-300 bg-gray-50 px-4 py-2 text-gray-900 focus:border-primary focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary dark:focus:ring-primary"
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            className="inline-flex items-center justify-center rounded bg-primary px-6 py-2 font-medium text-white hover:bg-primary/90"
-                        >
-                            Actualizar Menú
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/menu/list")}
-                            className="mt-2 inline-block rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
-                        >
-                            Volver a la lista
-                        </button>
-                    </form>
+        if (loading) {
+            return (
+                <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
                 </div>
+            );
+        }
+
+        if (error) {
+            return (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
+                    <strong className="font-bold">Error: </strong>
+                    <span className="block sm:inline">{error}</span>
+                </div>
+            );
+        }
+
+        return (
+            <div>
+                <h2>Actualizar Menú</h2>
+                <Breadcrumb pageName="Actualizar Menú" />
+                <MenuFormValidate 
+                    mode={2} // 2 = Modo actualización
+                    handleUpdate={this.handleUpdateMenu}
+                    menu={menu}
+                />
             </div>
-        </>
-    );
+        );
+    }
 }
 
-export default UpdateMenuPage;
+// Since react-router-dom v6 does not have withRouter, we create a wrapper to inject navigate
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+
+function withRouter(Component: any) {
+    function ComponentWithRouterProp(props: any) {
+        let navigate = useNavigate();
+        let params = useParams();
+        let location = useLocation();
+        return <Component {...props} navigate={navigate} params={params} location={location} />;
+    }
+    return ComponentWithRouterProp;
+}
+
+export default withRouter(UpdateMenuPage);

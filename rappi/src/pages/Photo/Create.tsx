@@ -1,85 +1,30 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { Photo } from '../../models/photo';
 import { createPhoto } from '../../services/photoService';
 import Swal from 'sweetalert2';
 import Breadcrumb from '../../components/Breadcrumb';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, Params, Location } from 'react-router-dom';
+import PhotoFormValidate from '../../components/Photos/PhotoFormValidate';
 
-const PhotoForm: React.FC<{ handleCreate: (photo: Omit<Photo, 'id'>) => void }> = ({ handleCreate }) => {
-    const [imageUrl, setImageUrl] = useState('');
-    const [caption, setCaption] = useState('');
-    const [takenAt, setTakenAt] = useState('');
-    const [issueId, setIssueId] = useState('');
+interface CreatePhotoPageProps {
+    navigate: NavigateFunction;
+    params: Readonly<Params<string>>;
+    location: Location;
+}
 
-    const onSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        handleCreate({
-            image_url: imageUrl,
-            caption,
-            taken_at: takenAt ? new Date(takenAt) : undefined,
-            issue_id: issueId ? Number(issueId) : undefined,
-        });
-    };
+interface CreatePhotoPageState {}
 
-    return (
-        <form onSubmit={onSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Crear Nueva Foto</h3>
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">URL de la Imagen</label>
-                <input
-                    type="text"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="Ingrese la URL de la imagen"
-                    required
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">Descripción</label>
-                <input
-                    type="text"
-                    value={caption}
-                    onChange={(e) => setCaption(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="Ingrese la descripción"
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">Fecha de la Foto</label>
-                <input
-                    type="date"
-                    value={takenAt}
-                    onChange={(e) => setTakenAt(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">ID del Issue</label>
-                <input
-                    type="number"
-                    value={issueId}
-                    onChange={(e) => setIssueId(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="Ingrese el ID del issue"
-                />
-            </div>
-            <button
-                type="submit"
-                className="mt-2 w-full rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition"
-            >
-                Crear Foto
-            </button>
-        </form>
-    );
-};
+class CreatePhotoPage extends Component<CreatePhotoPageProps, CreatePhotoPageState> {
+    constructor(props: CreatePhotoPageProps) {
+        super(props);
+    }
 
-const CreatePhotoPage: React.FC = () => {
-    const navigate = useNavigate();
-
-    const handleCreatePhoto = async (photo: Omit<Photo, 'id'>) => {
+    handleCreatePhoto = async (photo: Photo) => {
         try {
-            const createdPhoto = await createPhoto(photo);
+            // Omitimos el ID que viene del formulario ya que se genera en el backend
+            const { id, ...photoData } = photo;
+            const createdPhoto = await createPhoto(photoData);
+            
             if (createdPhoto) {
                 Swal.fire({
                     title: 'Completado',
@@ -91,7 +36,7 @@ const CreatePhotoPage: React.FC = () => {
                     }
                 });
                 console.log('Foto creada con éxito:', createdPhoto);
-                navigate('/photo/list');
+                this.props.navigate('/photo/list');
             } else {
                 Swal.fire({
                     title: 'Error',
@@ -110,19 +55,37 @@ const CreatePhotoPage: React.FC = () => {
                 icon: 'error',
                 timer: 3000,
                 customClass:{
-                        confirmButton: 'text-black'
-                    }
+                    confirmButton: 'text-black'
+                }
             });
         }
     };
 
-    return (
-        <div>
-            <h2>Crear Foto</h2>
-            <Breadcrumb pageName="Crear Foto" />
-            <PhotoForm handleCreate={handleCreatePhoto} />
-        </div>
-    );
-};
+    render() {
+        return (
+            <div>
+                <h2>Crear Foto</h2>
+                <Breadcrumb pageName="Crear Foto" />
+                <PhotoFormValidate 
+                    mode={1} // 1 = Modo creación
+                    handleCreate={this.handleCreatePhoto}
+                />
+            </div>
+        );
+    }
+}
 
-export default CreatePhotoPage;
+// Since react-router-dom v6 does not have withRouter, we create a wrapper to inject navigate
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+
+function withRouter(Component: any) {
+    function ComponentWithRouterProp(props: any) {
+        let navigate = useNavigate();
+        let params = useParams();
+        let location = useLocation();
+        return <Component {...props} navigate={navigate} params={params} location={location} />;
+    }
+    return ComponentWithRouterProp;
+}
+
+export default withRouter(CreatePhotoPage);

@@ -1,97 +1,153 @@
-import React from "react";
-import { Photo } from "../../models/photo";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { Component } from "react";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
+import { Photo } from "../../models/photo";
+import ReferenceSelect from "../ReferenceSelector";
 
-// Definimos la interfaz para los props
-interface PhotoFormProps {
-    mode: number; // Puede ser 1 (crear) o 2 (actualizar)
-    handleCreate?: (values: Photo) => void;
-    handleUpdate?: (values: Photo) => void;
-    photo?: Photo | null;
+interface PhotoFormValidateProps {
+  mode: number; // 1 = create, 2 = update
+  handleCreate?: (values: Photo) => void;
+  handleUpdate?: (values: Photo) => void;
+  photo?: Photo | null;
 }
 
-const PhotoFormValidate: React.FC<PhotoFormProps> = ({ mode, handleCreate, handleUpdate, photo }) => {
+interface PhotoFormValidateState {}
 
-    const handleSubmit = (formattedValues: Photo) => {
-        if (mode === 1 && handleCreate) {
-            handleCreate(formattedValues);  // Si `handleCreate` está definido, lo llamamos
-        } else if (mode === 2 && handleUpdate) {
-            handleUpdate(formattedValues);  // Si `handleUpdate` está definido, lo llamamos
-        } else {
-            console.error('No se proporcionó función para el modo actual');
-        }
+class PhotoFormValidate extends Component<PhotoFormValidateProps, PhotoFormValidateState> {
+  validationSchema = Yup.object({
+    image_url: Yup.string()
+      .url("Debe ser una URL válida")
+      .required("La URL de la imagen es obligatoria"),
+    caption: Yup.string().required("El título es obligatorio"),
+    taken_at: Yup.date()
+      .required("La fecha en que se tomó la foto es obligatoria")
+      .typeError("Debe ser una fecha válida"),
+    issue_id: Yup.number()
+      .typeError("El ID del problema debe ser un número")
+      .required("El ID del problema es obligatorio"),
+  });
+
+  handleSubmit = (values: Photo, actions: FormikHelpers<Photo>) => {
+    console.log("Valores enviados:", values);
+
+    if (this.props.mode === 1 && this.props.handleCreate) {
+      this.props.handleCreate(values);
+    } else if (this.props.mode === 2 && this.props.handleUpdate) {
+      this.props.handleUpdate(values);
+    } else {
+      console.error("No se proporcionó función para el modo actual");
+    }
+    actions.setSubmitting(false);
+  };
+
+  render() {
+    const initialValues: Photo = this.props.photo || {
+      id: "",
+      image_url: "",
+      caption: "",
+      taken_at: undefined,
+      issue_id: undefined,
     };
 
+    const mode = this.props.mode === 1 ? "Crear" : "Actualizar";
+
     return (
-        <Formik
-            initialValues={photo ? photo : {
-                image_url: "",
-                caption: "",
-                taken_at: "",
-                issue_id: 0,
-            }}
-            validationSchema={Yup.object({
-                image_url: Yup.string().url("URL inválida").required("La URL de la imagen es obligatoria"),
-                caption: Yup.string().required("El pie de foto es obligatorio"),
-                taken_at: Yup.date()
-                    .typeError("Fecha inválida")
-                    .required("La fecha en que se tomó la foto es obligatoria"),
-                issue_id: Yup.number()
-                    .typeError("Debe ser un número")
-                    .integer("Debe ser un número entero")
-                    .positive("Debe ser un número positivo")
-                    .required("El ID del problema es obligatorio"),
-            })}
-            onSubmit={(values) => {
-                const formattedValues = {
-                    ...values,
-                    taken_at: values.taken_at ? new Date(values.taken_at) : undefined,
-                };
-                handleSubmit(formattedValues);
-            }}
-        >
-            {({ handleSubmit }) => (
-                <Form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 p-6 bg-white rounded-md shadow-md">
-                    {/* URL de la imagen */}
-                    <div>
-                        <label htmlFor="image_url" className="block text-lg font-medium text-gray-700">URL de la imagen</label>
-                        <Field type="text" name="image_url" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="image_url" component="p" className="text-red-500 text-sm" />
-                    </div>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={this.validationSchema}
+        onSubmit={this.handleSubmit}
+        enableReinitialize
+      >
+        {({ isSubmitting, errors, touched, values }) => (
+          <Form className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+              {mode} Foto
+            </h3>
 
-                    {/* Pie de foto */}
-                    <div>
-                        <label htmlFor="caption" className="block text-lg font-medium text-gray-700">Pie de foto</label>
-                        <Field type="text" name="caption" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="caption" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">URL de la Imagen</label>
+              <Field
+                type="text"
+                name="image_url"
+                className={`w-full border ${
+                  errors.image_url && touched.image_url ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese la URL de la imagen"
+              />
+              <ErrorMessage
+                name="image_url"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Fecha tomada */}
-                    <div>
-                        <label htmlFor="taken_at" className="block text-lg font-medium text-gray-700">Fecha tomada</label>
-                        <Field type="date" name="taken_at" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="taken_at" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Título</label>
+              <Field
+                type="text"
+                name="caption"
+                className={`w-full border ${
+                  errors.caption && touched.caption ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el título"
+              />
+              <ErrorMessage
+                name="caption"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* ID del problema */}
-                    <div>
-                        <label htmlFor="issue_id" className="block text-lg font-medium text-gray-700">ID del problema</label>
-                        <Field type="number" name="issue_id" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="issue_id" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Fecha de la Foto</label>
+              <Field
+                type="date"
+                name="taken_at"
+                className={`w-full border ${
+                  errors.taken_at && touched.taken_at ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+              />
+              <ErrorMessage
+                name="taken_at"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Botón de enviar */}
-                    <button
-                        type="submit"
-                        className={`py-2 px-4 text-white rounded-md ${mode === 1 ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"}`}
-                    >
-                        {mode === 1 ? "Crear" : "Actualizar"}
-                    </button>
-                </Form>
-            )}
-        </Formik>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">ID del Problema</label>
+              <ReferenceSelect
+                name="issue_id"
+                model="issue"
+                valueKey="id"
+                labelKey="id"
+                className={`w-full border ${
+                  errors.issue_id && touched.issue_id ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+              />
+              <ErrorMessage
+                name="issue_id"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
+
+            <div className="text-sm text-gray-600">
+              Problema seleccionado: {values.issue_id || "Ninguno"}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-2 w-full rounded bg-blue-600 px-4 py-2 text-sm font-medium text-black hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              {isSubmitting ? "Procesando..." : `${mode} Foto`}
+            </button>
+          </Form>
+        )}
+      </Formik>
     );
-};
+  }
+}
 
 export default PhotoFormValidate;

@@ -1,90 +1,148 @@
-import React from "react";
-import { Product } from "../../models/product";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { Component } from "react";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
+import { Product } from "../../models/product";
 
-// Definimos la interfaz para los props
-interface ProductFormProps {
-    mode: number; // Puede ser 1 (crear) o 2 (actualizar)
-    handleCreate?: (values: Product) => void;
-    handleUpdate?: (values: Product) => void;
-    product?: Product | null;
+interface ProductFormValidateProps {
+  mode: number; // 1 = create, 2 = update
+  handleCreate?: (values: Product) => void;
+  handleUpdate?: (values: Product) => void;
+  product?: Product | null;
 }
 
-const ProductFormValidate: React.FC<ProductFormProps> = ({ mode, handleCreate, handleUpdate, product }) => {
+interface ProductFormValidateState {}
 
-    const handleSubmit = (formattedValues: Product) => {
-        if (mode === 1 && handleCreate) {
-            handleCreate(formattedValues);  // Si `handleCreate` está definido, lo llamamos
-        } else if (mode === 2 && handleUpdate) {
-            handleUpdate(formattedValues);  // Si `handleUpdate` está definido, lo llamamos
-        } else {
-            console.error('No se proporcionó función para el modo actual');
-        }
+class ProductFormValidate extends Component<ProductFormValidateProps, ProductFormValidateState> {
+  validationSchema = Yup.object({
+    name: Yup.string().required("El nombre es obligatorio"),
+    description: Yup.string().required("La descripción es obligatoria"),
+    price: Yup.number()
+      .typeError("El precio debe ser un número")
+      .required("El precio es obligatorio")
+      .min(0, "El precio no puede ser negativo"),
+    category: Yup.string().required("La categoría es obligatoria"),
+  });
+
+  handleSubmit = (values: Product, actions: FormikHelpers<Product>) => {
+    console.log("Valores enviados:", values);
+
+    if (this.props.mode === 1 && this.props.handleCreate) {
+      this.props.handleCreate(values);
+    } else if (this.props.mode === 2 && this.props.handleUpdate) {
+      this.props.handleUpdate(values);
+    } else {
+      console.error("No se proporcionó función para el modo actual");
+    }
+    actions.setSubmitting(false);
+  };
+
+  render() {
+    const initialValues: Product = this.props.product || {
+      id: "",
+      name: "",
+      description: "",
+      price: 0,
+      category: "",
     };
 
+    const mode = this.props.mode === 1 ? "Crear" : "Actualizar";
+
     return (
-        <Formik
-            initialValues={product ? product : {
-                name: "",
-                description: "",
-                price: 0,
-                category: "",
-            }}
-            validationSchema={Yup.object({
-                name: Yup.string().required("El nombre es obligatorio"),
-                description: Yup.string().required("La descripción es obligatoria"),
-                price: Yup.number()
-                    .typeError("Debe ser un número")
-                    .positive("Debe ser un número positivo")
-                    .required("El precio es obligatorio"),
-                category: Yup.string().required("La categoría es obligatoria"),
-            })}
-            onSubmit={(values) => {
-                handleSubmit(values);
-            }}
-        >
-            {({ handleSubmit }) => (
-                <Form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 p-6 bg-white rounded-md shadow-md">
-                    {/* Nombre */}
-                    <div>
-                        <label htmlFor="name" className="block text-lg font-medium text-gray-700">Nombre</label>
-                        <Field type="text" name="name" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="name" component="p" className="text-red-500 text-sm" />
-                    </div>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={this.validationSchema}
+        onSubmit={this.handleSubmit}
+        enableReinitialize
+      >
+        {({ isSubmitting, errors, touched }) => (
+          <Form className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+              {mode} Producto
+            </h3>
 
-                    {/* Descripción */}
-                    <div>
-                        <label htmlFor="description" className="block text-lg font-medium text-gray-700">Descripción</label>
-                        <Field type="text" name="description" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="description" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Nombre</label>
+              <Field
+                type="text"
+                name="name"
+                className={`w-full border ${
+                  errors.name && touched.name ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el nombre"
+              />
+              <ErrorMessage
+                name="name"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Precio */}
-                    <div>
-                        <label htmlFor="price" className="block text-lg font-medium text-gray-700">Precio</label>
-                        <Field type="number" name="price" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="price" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Descripción</label>
+              <Field
+                as="textarea"
+                name="description"
+                className={`w-full border ${
+                  errors.description && touched.description ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese la descripción"
+                rows={3}
+              />
+              <ErrorMessage
+                name="description"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Categoría */}
-                    <div>
-                        <label htmlFor="category" className="block text-lg font-medium text-gray-700">Categoría</label>
-                        <Field type="text" name="category" className="w-full border rounded-md p-2" />
-                        <ErrorMessage name="category" component="p" className="text-red-500 text-sm" />
-                    </div>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Precio</label>
+              <Field
+                type="number"
+                name="price"
+                className={`w-full border ${
+                  errors.price && touched.price ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese el precio"
+                min="0"
+                step="0.01"
+              />
+              <ErrorMessage
+                name="price"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
 
-                    {/* Botón de enviar */}
-                    <button
-                        type="submit"
-                        className={`py-2 px-4 text-white rounded-md ${mode === 1 ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"}`}
-                    >
-                        {mode === 1 ? "Crear" : "Actualizar"}
-                    </button>
-                </Form>
-            )}
-        </Formik>
+            <div>
+              <label className="block mb-2 font-semibold text-gray-700">Categoría</label>
+              <Field
+                type="text"
+                name="category"
+                className={`w-full border ${
+                  errors.category && touched.category ? "border-red-500" : "border-gray-300"
+                } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition`}
+                placeholder="Ingrese la categoría"
+              />
+              <ErrorMessage
+                name="category"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-2 w-full rounded bg-blue-600 px-4 py-2 text-sm font-medium text-black hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              {isSubmitting ? "Procesando..." : `${mode} Producto`}
+            </button>
+          </Form>
+        )}
+      </Formik>
     );
-};
+  }
+}
 
 export default ProductFormValidate;
