@@ -100,6 +100,9 @@ const CreateIssuePage: React.FC = () => {
                     text: 'Se ha creado correctamente el issue',
                     icon: 'success',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 console.log('Issue creado con éxito:', createdIssue);
                 navigate('/issue/list');
@@ -109,6 +112,9 @@ const CreateIssuePage: React.FC = () => {
                     text: 'Existe un problema al momento de crear el issue',
                     icon: 'error',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -117,6 +123,9 @@ const CreateIssuePage: React.FC = () => {
                 text: 'Existe un problema al momento de crear el issue',
                 icon: 'error',
                 timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

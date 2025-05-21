@@ -43,7 +43,10 @@ const UpdateOrderPage = () => {
                 title: "Error",
                 text: "Pedido no cargado correctamente.",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
             return;
         }
@@ -55,7 +58,10 @@ const UpdateOrderPage = () => {
                     title: "Completado",
                     text: "Se ha actualizado correctamente el pedido",
                     icon: "success",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 navigate("/order/list");
             } else {
@@ -63,7 +69,10 @@ const UpdateOrderPage = () => {
                     title: "Error",
                     text: "Existe un problema al momento de actualizar el pedido",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -71,7 +80,10 @@ const UpdateOrderPage = () => {
                 title: "Error",
                 text: "Existe un problema al momento de actualizar el pedido",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

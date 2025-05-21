@@ -43,7 +43,10 @@ const UpdateMotorcyclePage = () => {
                 title: "Error",
                 text: "Motocicleta no cargada correctamente.",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
             return;
         }
@@ -55,7 +58,10 @@ const UpdateMotorcyclePage = () => {
                     title: "Completado",
                     text: "Se ha actualizado correctamente la motocicleta",
                     icon: "success",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 navigate("/motorcycle/list");
             } else {
@@ -63,7 +69,10 @@ const UpdateMotorcyclePage = () => {
                     title: "Error",
                     text: "Existe un problema al momento de actualizar la motocicleta",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -71,7 +80,10 @@ const UpdateMotorcyclePage = () => {
                 title: "Error",
                 text: "Existe un problema al momento de actualizar la motocicleta",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

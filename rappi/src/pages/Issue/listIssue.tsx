@@ -35,14 +35,18 @@ const ListIssue = () => {
     const handleDelete = async (id: number) => {
         console.log(`Attempting to delete issue with ID: ${id}`);
         Swal.fire({
-            title: "Delete",
-            text: "Are you sure you want to delete this record?",
+            title: "Eliminación",
+            text: "Está seguro de querer eliminar este registro?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete",
-            cancelButtonText: "No"
+            cancelButtonText: "No",
+            customClass: {
+            confirmButton: 'text-black',
+            cancelButton: 'text-black'
+            }
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const success = await deleteIssue(id);
@@ -50,7 +54,8 @@ const ListIssue = () => {
                     Swal.fire({
                         title: "Deleted",
                         text: "The record has been deleted",
-                        icon: "success"
+                        icon: "success",
+                        
                     });
                     fetchData();
                 }
@@ -64,7 +69,7 @@ const ListIssue = () => {
                 <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                     <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
                         <h3 className="font-medium text-black dark:text-white">
-                            Issue List
+                            Listado de asuntos
                         </h3>
                     </div>
                     <div className="flex flex-col gap-5.5 p-6.5">
@@ -72,12 +77,12 @@ const ListIssue = () => {
                             <table className="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-300">
                                 <thead className="text-xs text-gray-900 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-200">
                                     <tr>
-                                        <th scope="col" className="px-6 py-3">Description</th>
-                                        <th scope="col" className="px-6 py-3">Issue Type</th>
-                                        <th scope="col" className="px-6 py-3">Date Reported</th>
-                                        <th scope="col" className="px-6 py-3">Status</th>
-                                        <th scope="col" className="px-6 py-3">Motorcycle ID</th>
-                                        <th scope="col" className="px-6 py-3">Actions</th>
+                                        <th scope="col" className="px-6 py-3">Descripción</th>
+                                        <th scope="col" className="px-6 py-3">Tipo de asunto</th>
+                                        <th scope="col" className="px-6 py-3">Fecha de reporte</th>
+                                        <th scope="col" className="px-6 py-3">Estado</th>
+                                        <th scope="col" className="px-6 py-3">Motocicleta ID</th>
+                                        <th scope="col" className="px-6 py-3">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>

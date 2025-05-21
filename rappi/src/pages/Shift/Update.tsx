@@ -46,7 +46,10 @@ const UpdateShiftPage = () => {
                 title: "Error",
                 text: "Turno no cargado correctamente.",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
             return;
         }
@@ -58,7 +61,10 @@ const UpdateShiftPage = () => {
                     title: "Completado",
                     text: "Se ha actualizado correctamente el turno",
                     icon: "success",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 navigate("/shift/list");
             } else {
@@ -66,7 +72,10 @@ const UpdateShiftPage = () => {
                     title: "Error",
                     text: "Existe un problema al momento de actualizar el turno",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -74,7 +83,10 @@ const UpdateShiftPage = () => {
                 title: "Error",
                 text: "Existe un problema al momento de actualizar el turno",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

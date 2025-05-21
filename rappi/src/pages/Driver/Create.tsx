@@ -1,131 +1,98 @@
-import React, { Component, ChangeEvent, FormEvent } from 'react';
+import React, { useState } from 'react';
 import { Driver } from '../../models/driver';
 import { createDriver } from '../../services/driverService';
 import Swal from 'sweetalert2';
 import Breadcrumb from '../../components/Breadcrumb';
-import { NavigateFunction, Params, Location } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-interface DriverFormProps {
-    handleCreate: (driver: Omit<Driver, 'id'>) => void;
-}
+const DriverForm: React.FC<{ handleCreate: (driver: Omit<Driver, 'id'>) => void }> = ({ handleCreate }) => {
+    const [name, setName] = useState('');
+    const [licenseNumber, setLicenseNumber] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [status, setStatus] = useState('');
 
-interface DriverFormState {
-    name: string;
-    license_number: string;
-    email: string;
-    phone: string;
-    status: string;
-}
-
-class DriverForm extends Component<DriverFormProps, DriverFormState> {
-    constructor(props: DriverFormProps) {
-        super(props);
-        this.state = {
-            name: '',
-            license_number: '',
-            email: '',
-            phone: '',
-            status: '',
-        };
-    }
-
-    handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ [e.target.name]: e.target.value } as Pick<DriverFormState, keyof DriverFormState>);
-    };
-
-    onSubmit = (e: FormEvent) => {
+    const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const { name, license_number, email, phone, status } = this.state;
-        this.props.handleCreate({
+        handleCreate({
             name,
-            license_number,
+            license_number: licenseNumber,
             email,
             phone,
             status,
         });
     };
 
-    render() {
-        const { name, license_number, email, phone, status } = this.state;
-        return (
-            <form onSubmit={this.onSubmit} className="space-y-4 max-w-md">
-                <div>
-                    <label className="block mb-1 font-semibold">Nombre</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={name}
-                        onChange={this.handleChange}
-                        className="w-full border rounded px-3 py-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block mb-1 font-semibold">Número de Licencia</label>
-                    <input
-                        type="text"
-                        name="license_number"
-                        value={license_number}
-                        onChange={this.handleChange}
-                        className="w-full border rounded px-3 py-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block mb-1 font-semibold">Correo Electrónico</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={email}
-                        onChange={this.handleChange}
-                        className="w-full border rounded px-3 py-2"
-                    />
-                </div>
-                <div>
-                    <label className="block mb-1 font-semibold">Teléfono</label>
-                    <input
-                        type="tel"
-                        name="phone"
-                        value={phone}
-                        onChange={this.handleChange}
-                        className="w-full border rounded px-3 py-2"
-                    />
-                </div>
-                <div>
-                    <label className="block mb-1 font-semibold">Estado</label>
-                    <input
-                        type="text"
-                        name="status"
-                        value={status}
-                        onChange={this.handleChange}
-                        className="w-full border rounded px-3 py-2"
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                    Crear Conductor
-                </button>
-            </form>
-        );
-    }
-}
+    return (
+        <form onSubmit={onSubmit} className="space-y-6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Crear Nuevo Conductor</h3>
+            <div>
+                <label className="block mb-2 font-semibold text-gray-700">Nombre</label>
+                <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el nombre"
+                    required
+                />
+            </div>
+            <div>
+                <label className="block mb-2 font-semibold text-gray-700">Número de Licencia</label>
+                <input
+                    type="text"
+                    value={licenseNumber}
+                    onChange={(e) => setLicenseNumber(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el número de licencia"
+                    required
+                />
+            </div>
+            <div>
+                <label className="block mb-2 font-semibold text-gray-700">Correo Electrónico</label>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el correo electrónico"
+                    required
+                />
+            </div>
+            <div>
+                <label className="block mb-2 font-semibold text-gray-700">Teléfono</label>
+                <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el teléfono"
+                />
+            </div>
+            <div>
+                <label className="block mb-2 font-semibold text-gray-700">Estado</label>
+                <input
+                    type="text"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Ingrese el estado"
+                />
+            </div>
+            <button
+                type="submit"
+                className="mt-2 w-full rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition"
+            >
+                Crear Conductor
+            </button>
+        </form>
+    );
+};
 
-interface CreateDriverPageProps {
-    navigate: NavigateFunction;
-    params: Readonly<Params<string>>;
-    location: Location;
-}
+const CreateDriverPage: React.FC = () => {
+    const navigate = useNavigate();
 
-interface CreateDriverPageState {}
-
-class CreateDriverPage extends Component<CreateDriverPageProps, CreateDriverPageState> {
-    constructor(props: CreateDriverPageProps) {
-        super(props);
-    }
-
-    handleCreateDriver = async (driver: Omit<Driver, 'id'>) => {
+    const handleCreateDriver = async (driver: Omit<Driver, 'id'>) => {
         try {
             const createdDriver = await createDriver(driver);
             if (createdDriver) {
@@ -134,15 +101,21 @@ class CreateDriverPage extends Component<CreateDriverPageProps, CreateDriverPage
                     text: 'Se ha creado correctamente el conductor',
                     icon: 'success',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 console.log('Conductor creado con éxito:', createdDriver);
-                this.props.navigate('/driver/list');
+                navigate('/driver/list');
             } else {
                 Swal.fire({
                     title: 'Error',
                     text: 'Existe un problema al momento de crear el conductor',
                     icon: 'error',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -151,32 +124,20 @@ class CreateDriverPage extends Component<CreateDriverPageProps, CreateDriverPage
                 text: 'Existe un problema al momento de crear el conductor',
                 icon: 'error',
                 timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };
 
-    render() {
-        return (
-            <div>
-                <h2>Crear Conductor</h2>
-                <Breadcrumb pageName="Crear Conductor" />
-                <DriverForm handleCreate={this.handleCreateDriver} />
-            </div>
-        );
-    }
-}
+    return (
+        <div>
+            <h2>Crear Conductor</h2>
+            <Breadcrumb pageName="Crear Conductor" />
+            <DriverForm handleCreate={handleCreateDriver} />
+        </div>
+    );
+};
 
-// Since react-router-dom v6 does not have withRouter, we create a wrapper to inject navigate
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-
-function withRouter(Component: any) {
-    function ComponentWithRouterProp(props: any) {
-        let navigate = useNavigate();
-        let params = useParams();
-        let location = useLocation();
-        return <Component {...props} navigate={navigate} params={params} location={location} />;
-    }
-    return ComponentWithRouterProp;
-}
-
-export default withRouter(CreateDriverPage);
+export default CreateDriverPage;

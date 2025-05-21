@@ -19,7 +19,7 @@ const ViewProductPage: React.FC = () => {
                 return;
             }
             setLoading(true);
-            const data = await getProductById(Number(id));
+            const data = await getProductById(id);
             if (data) {
                 setProduct(data);
                 setError(null);

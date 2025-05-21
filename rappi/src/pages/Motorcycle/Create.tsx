@@ -90,6 +90,9 @@ const CreateMotorcyclePage: React.FC = () => {
                     text: 'Se ha creado correctamente la motocicleta',
                     icon: 'success',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 console.log('Motocicleta creada con éxito:', createdMotorcycle);
                 navigate('/motorcycle/list');
@@ -99,6 +102,9 @@ const CreateMotorcyclePage: React.FC = () => {
                     text: 'Existe un problema al momento de crear la motocicleta',
                     icon: 'error',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -107,6 +113,9 @@ const CreateMotorcyclePage: React.FC = () => {
                 text: 'Existe un problema al momento de crear la motocicleta',
                 icon: 'error',
                 timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

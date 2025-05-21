@@ -47,7 +47,10 @@ const UpdatePhotoPage = () => {
                 title: "Error",
                 text: "Foto no cargada correctamente.",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
             return;
         }
@@ -59,7 +62,10 @@ const UpdatePhotoPage = () => {
                     title: "Completado",
                     text: "Se ha actualizado correctamente la foto",
                     icon: "success",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 navigate("/photo/list");
             } else {
@@ -67,7 +73,10 @@ const UpdatePhotoPage = () => {
                     title: "Error",
                     text: "Existe un problema al momento de actualizar la foto",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -75,7 +84,10 @@ const UpdatePhotoPage = () => {
                 title: "Error",
                 text: "Existe un problema al momento de actualizar la foto",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

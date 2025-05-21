@@ -112,6 +112,9 @@ class CreateCustomerPage extends Component<CreateCustomerPageProps, CreateCustom
                     text: 'Se ha creado correctamente el cliente',
                     icon: 'success',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 console.log('Cliente creado con éxito:', createdCustomer);
                 this.props.navigate('/customer/list');
@@ -121,6 +124,9 @@ class CreateCustomerPage extends Component<CreateCustomerPageProps, CreateCustom
                     text: 'Existe un problema al momento de crear el cliente',
                     icon: 'error',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -129,6 +135,9 @@ class CreateCustomerPage extends Component<CreateCustomerPageProps, CreateCustom
                 text: 'Existe un problema al momento de crear el cliente',
                 icon: 'error',
                 timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

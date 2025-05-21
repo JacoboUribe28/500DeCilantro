@@ -35,7 +35,10 @@ const UpdateDriverPage = () => {
                 title: "Error",
                 text: "Conductor no cargado correctamente.",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
             return;
         }
@@ -47,7 +50,10 @@ const UpdateDriverPage = () => {
                     title: "Completado",
                     text: "Se ha actualizado correctamente el conductor",
                     icon: "success",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 navigate("/driver/list");
             } else {
@@ -55,7 +61,10 @@ const UpdateDriverPage = () => {
                     title: "Error",
                     text: "Existe un problema al momento de actualizar el conductor",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -63,7 +72,10 @@ const UpdateDriverPage = () => {
                 title: "Error",
                 text: "Existe un problema al momento de actualizar el conductor",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

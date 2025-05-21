@@ -101,6 +101,9 @@ const CreateShiftPage: React.FC = () => {
                     text: 'Se ha creado correctamente el turno',
                     icon: 'success',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 console.log('Turno creado con éxito:', createdShift);
                 navigate('/shift/list');
@@ -110,6 +113,9 @@ const CreateShiftPage: React.FC = () => {
                     text: 'Existe un problema al momento de crear el turno',
                     icon: 'error',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -118,6 +124,9 @@ const CreateShiftPage: React.FC = () => {
                 text: 'Existe un problema al momento de crear el turno',
                 icon: 'error',
                 timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

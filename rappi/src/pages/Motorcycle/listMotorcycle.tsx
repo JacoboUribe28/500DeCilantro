@@ -35,14 +35,18 @@ const ListMotorcycle = () => {
     const handleDelete = async (id: number) => {
         console.log(`Attempting to delete motorcycle with ID: ${id}`);
         Swal.fire({
-            title: "Delete",
-            text: "Are you sure you want to delete this record?",
+            title: "Eliminación",
+            text: "Está seguro de querer eliminar este registro?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete",
-            cancelButtonText: "No"
+            cancelButtonText: "No",
+            customClass: {
+            confirmButton: 'text-black',
+            cancelButton: 'text-black'
+            }
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const success = await deleteMotorcycle(id);
@@ -50,7 +54,10 @@ const ListMotorcycle = () => {
                     Swal.fire({
                         title: "Deleted",
                         text: "The record has been deleted",
-                        icon: "success"
+                        icon: "success",
+                        customClass:{
+                        confirmButton: 'text-black'
+                    }
                     });
                     fetchData();
                 }
@@ -64,7 +71,7 @@ const ListMotorcycle = () => {
                 <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                     <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
                         <h3 className="font-medium text-black dark:text-white">
-                            Motorcycle List
+                            Listado de motocicleta
                         </h3>
                     </div>
                     <div className="flex flex-col gap-5.5 p-6.5">
@@ -72,11 +79,11 @@ const ListMotorcycle = () => {
                             <table className="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-300">
                                 <thead className="text-xs text-gray-900 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-200">
                                     <tr>
-                                        <th scope="col" className="px-6 py-3">License Plate</th>
-                                        <th scope="col" className="px-6 py-3">Brand</th>
-                                        <th scope="col" className="px-6 py-3">Year</th>
-                                        <th scope="col" className="px-6 py-3">Status</th>
-                                        <th scope="col" className="px-6 py-3">Actions</th>
+                                        <th scope="col" className="px-6 py-3">Placa</th>
+                                        <th scope="col" className="px-6 py-3">Marca</th>
+                                        <th scope="col" className="px-6 py-3">Año</th>
+                                        <th scope="col" className="px-6 py-3">Estado</th>
+                                        <th scope="col" className="px-6 py-3">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>

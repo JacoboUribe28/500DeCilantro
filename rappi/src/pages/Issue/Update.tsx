@@ -35,7 +35,10 @@ const UpdateIssuePage = () => {
                 title: "Error",
                 text: "Problema no cargado correctamente.",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
             return;
         }
@@ -47,7 +50,10 @@ const UpdateIssuePage = () => {
                     title: "Completado",
                     text: "Se ha actualizado correctamente el problema",
                     icon: "success",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 navigate("/issue/list");
             } else {
@@ -55,7 +61,10 @@ const UpdateIssuePage = () => {
                     title: "Error",
                     text: "Existe un problema al momento de actualizar el problema",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -63,7 +72,10 @@ const UpdateIssuePage = () => {
                 title: "Error",
                 text: "Existe un problema al momento de actualizar el problema",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };
