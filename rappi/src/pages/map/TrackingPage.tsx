@@ -1,64 +1,28 @@
+// src/pages/TrackingPage.tsx
 import { useState } from "react";
-import MotorcycleMap from "../../components/map/MotorcycleMap";
-
-import {
-  startTracking,
-  stopTracking,
-} from "../../services/motorcycleService";
+import { startTracking } from "../../services/trackingService";
+import RealTimeMap from "../../components/map/RealTimeMap";
 
 const TrackingPage = () => {
-  const [loading, setLoading] = useState(false);
-  const [trackingActive, setTrackingActive] = useState(false); // ✅ Nuevo estado
-  const licensePlate = "ABC124";
+  const [tracking, setTracking] = useState(false);
+  const [plate] = useState("ABC124");
 
   const handleStart = async () => {
-    setLoading(true);
     try {
-      await startTracking(licensePlate, 5.0553, -75.4906);
-      setTrackingActive(true); // ✅ Activar rastreo en el mapa
-      alert("Rastreo iniciado");
+      await startTracking(plate);
+      setTracking(true);
     } catch (err) {
-      console.error(err);
-      alert("Error al iniciar rastreo");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleStop = async () => {
-    setLoading(true);
-    try {
-      await stopTracking(licensePlate);
-      setTrackingActive(false); // ✅ Detener rastreo en el mapa
-      alert("Rastreo detenido");
-    } catch (err) {
-      console.error(err);
-      alert("Error al detener rastreo");
-    } finally {
-      setLoading(false);
+      alert("No se pudo iniciar rastreo");
     }
   };
 
   return (
-    <div className="p-4 space-y-4">
-      <h2 className="text-xl font-semibold">Seguimiento de Motocicleta</h2>
-      <div className="flex gap-4">
-        <button
-          onClick={handleStart}
-          disabled={loading}
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
-          Iniciar rastreo
-        </button>
-        <button
-          onClick={handleStop}
-          disabled={loading}
-          className="bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Detener rastreo
-        </button>
-      </div>
-      <MotorcycleMap active={trackingActive} />
+    <div className="p-4">
+      <button onClick={handleStart} className="bg-blue-500 text-white px-4 py-2 rounded">
+        Iniciar Rastreo
+      </button>
+
+      {tracking && <RealTimeMap plate={plate} />}
     </div>
   );
 };
