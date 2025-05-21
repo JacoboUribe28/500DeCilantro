@@ -35,7 +35,10 @@ const UpdateAddressPage = () => {
                 title: "Error",
                 text: "Dirección no cargada correctamente.",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
             return;
         }
@@ -47,7 +50,10 @@ const UpdateAddressPage = () => {
                     title: "Completado",
                     text: "Se ha actualizado correctamente la dirección",
                     icon: "success",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 navigate("/address/list");
             } else {
@@ -55,7 +61,10 @@ const UpdateAddressPage = () => {
                     title: "Error",
                     text: "Existe un problema al momento de actualizar la dirección",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -63,7 +72,10 @@ const UpdateAddressPage = () => {
                 title: "Error",
                 text: "Existe un problema al momento de actualizar la dirección",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

@@ -113,6 +113,10 @@ const CreateAddressPage: React.FC = () => {
                     text: 'Se ha creado correctamente la dirección',
                     icon: 'success',
                     timer: 3000,
+                    showConfirmButton: true,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 console.log('Dirección creada con éxito:', createdAddress);
                 navigate('/address/list');
@@ -122,6 +126,10 @@ const CreateAddressPage: React.FC = () => {
                     text: 'Existe un problema al momento de crear la dirección',
                     icon: 'error',
                     timer: 3000,
+                    showConfirmButton: true,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -130,6 +138,10 @@ const CreateAddressPage: React.FC = () => {
                 text: 'Existe un problema al momento de crear la dirección',
                 icon: 'error',
                 timer: 3000,
+                showConfirmButton: true,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

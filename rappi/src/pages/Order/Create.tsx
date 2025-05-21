@@ -116,6 +116,9 @@ const CreateOrderPage: React.FC = () => {
                     text: 'Se ha creado correctamente el pedido',
                     icon: 'success',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 console.log('Pedido creado con éxito:', createdOrder);
                 navigate('/order/list');
@@ -125,6 +128,9 @@ const CreateOrderPage: React.FC = () => {
                     text: 'Existe un problema al momento de crear el pedido',
                     icon: 'error',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -133,6 +139,9 @@ const CreateOrderPage: React.FC = () => {
                 text: 'Existe un problema al momento de crear el pedido',
                 icon: 'error',
                 timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

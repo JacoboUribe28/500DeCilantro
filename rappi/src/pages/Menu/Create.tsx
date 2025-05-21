@@ -91,6 +91,9 @@ const CreateMenuPage: React.FC = () => {
                     text: 'Se ha creado correctamente el menú',
                     icon: 'success',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 console.log('Menú creado con éxito:', createdMenu);
                 navigate('/menu/list');
@@ -100,6 +103,9 @@ const CreateMenuPage: React.FC = () => {
                     text: 'Existe un problema al momento de crear el menú',
                     icon: 'error',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -108,6 +114,9 @@ const CreateMenuPage: React.FC = () => {
                 text: 'Existe un problema al momento de crear el menú',
                 icon: 'error',
                 timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

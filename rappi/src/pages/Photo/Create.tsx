@@ -86,6 +86,9 @@ const CreatePhotoPage: React.FC = () => {
                     text: 'Se ha creado correctamente la foto',
                     icon: 'success',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 console.log('Foto creada con éxito:', createdPhoto);
                 navigate('/photo/list');
@@ -95,6 +98,9 @@ const CreatePhotoPage: React.FC = () => {
                     text: 'Existe un problema al momento de crear la foto',
                     icon: 'error',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -103,6 +109,9 @@ const CreatePhotoPage: React.FC = () => {
                 text: 'Existe un problema al momento de crear la foto',
                 icon: 'error',
                 timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

@@ -44,7 +44,10 @@ const UpdateMenuPage = () => {
                 title: "Error",
                 text: "Menú no cargado correctamente.",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
             return;
         }
@@ -56,7 +59,10 @@ const UpdateMenuPage = () => {
                     title: "Completado",
                     text: "Se ha actualizado correctamente el menú",
                     icon: "success",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 navigate("/menu/list");
             } else {
@@ -64,7 +70,10 @@ const UpdateMenuPage = () => {
                     title: "Error",
                     text: "Existe un problema al momento de actualizar el menú",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -72,7 +81,10 @@ const UpdateMenuPage = () => {
                 title: "Error",
                 text: "Existe un problema al momento de actualizar el menú",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

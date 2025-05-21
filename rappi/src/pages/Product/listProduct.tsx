@@ -35,14 +35,18 @@ const ListProduct = () => {
     const handleDelete = async (id: number) => {
         console.log(`Attempting to delete product with ID: ${id}`);
         Swal.fire({
-            title: "Delete",
-            text: "Are you sure you want to delete this record?",
+            title: "Eliminación",
+            text: "Está seguro de querer eliminar este registro?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete",
-            cancelButtonText: "No"
+            cancelButtonText: "No",
+            customClass: {
+            confirmButton: 'text-black',
+            cancelButton: 'text-black'
+            }
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const success = await deleteProduct(id);
@@ -50,7 +54,10 @@ const ListProduct = () => {
                     Swal.fire({
                         title: "Deleted",
                         text: "The record has been deleted",
-                        icon: "success"
+                        icon: "success",
+                        customClass:{
+                        confirmButton: 'text-black'
+                    }
                     });
                     fetchData();
                 }
@@ -64,7 +71,7 @@ const ListProduct = () => {
                 <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                     <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
                         <h3 className="font-medium text-black dark:text-white">
-                            Product List
+                            Listado de productos
                         </h3>
                     </div>
                     <div className="flex flex-col gap-5.5 p-6.5">
@@ -72,11 +79,11 @@ const ListProduct = () => {
                             <table className="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-300">
                                 <thead className="text-xs text-gray-900 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-200">
                                     <tr>
-                                        <th scope="col" className="px-6 py-3">Name</th>
-                                        <th scope="col" className="px-6 py-3">Description</th>
-                                        <th scope="col" className="px-6 py-3">Price</th>
-                                        <th scope="col" className="px-6 py-3">Category</th>
-                                        <th scope="col" className="px-6 py-3">Actions</th>
+                                        <th scope="col" className="px-6 py-3">Nombre</th>
+                                        <th scope="col" className="px-6 py-3">Descripción</th>
+                                        <th scope="col" className="px-6 py-3">Precio</th>
+                                        <th scope="col" className="px-6 py-3">Categoria</th>
+                                        <th scope="col" className="px-6 py-3">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>

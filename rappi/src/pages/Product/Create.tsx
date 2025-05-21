@@ -87,6 +87,9 @@ const CreateProductPage: React.FC = () => {
                     text: 'Se ha creado correctamente el producto',
                     icon: 'success',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 console.log('Producto creado con éxito:', createdProduct);
                 navigate('/product/list');
@@ -96,6 +99,9 @@ const CreateProductPage: React.FC = () => {
                     text: 'Existe un problema al momento de crear el producto',
                     icon: 'error',
                     timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -104,6 +110,9 @@ const CreateProductPage: React.FC = () => {
                 text: 'Existe un problema al momento de crear el producto',
                 icon: 'error',
                 timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };

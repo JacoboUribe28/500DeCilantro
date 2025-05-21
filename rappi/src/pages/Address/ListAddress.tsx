@@ -38,11 +38,15 @@ const ListAddress = () => {
             title: "Eliminación",
             text: "Está seguro de querer eliminar el registro?",
             icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Si, eliminar",
-            cancelButtonText: "No"
+        showCancelButton: true,
+        confirmButtonColor: "#black",
+        cancelButtonColor: "#black",
+        confirmButtonText: "Si, eliminar",
+        cancelButtonText: "No",
+        customClass: {
+        confirmButton: 'text-black',
+        cancelButton: 'text-black'
+        }
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const success = await deleteAddress(id);
@@ -50,7 +54,10 @@ const ListAddress = () => {
                     Swal.fire({
                         title: "Eliminado",
                         text: "El registro se ha eliminado",
-                        icon: "success"
+                        icon: "success",
+                        customClass:{
+                        confirmButton: 'text-black'
+                    }
                     });
                     fetchData();
                 }
@@ -77,6 +84,7 @@ const ListAddress = () => {
                                         <th scope="col" className="px-6 py-3">Estado</th>
                                         <th scope="col" className="px-6 py-3">Código Postal</th>
                                         <th scope="col" className="px-6 py-3">Información adicional</th>
+                                        <th scope="col" className="px-6 py-3">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>

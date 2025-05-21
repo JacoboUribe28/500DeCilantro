@@ -34,7 +34,10 @@ const UpdateCustomerPage = () => {
                 title: "Error",
                 text: "Los datos del cliente no se cargaron correctamente.",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
             return;
         }
@@ -46,7 +49,10 @@ const UpdateCustomerPage = () => {
                     title: "Completado",
                     text: "El cliente se ha actualizado correctamente",
                     icon: "success",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
                 navigate("/customer/list");
             } else {
@@ -54,7 +60,10 @@ const UpdateCustomerPage = () => {
                     title: "Error",
                     text: "Hubo un problema al actualizar el cliente",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    customClass:{
+                        confirmButton: 'text-black'
+                    }
                 });
             }
         } catch (error) {
@@ -62,7 +71,10 @@ const UpdateCustomerPage = () => {
                 title: "Error",
                 text: "Hubo un problema al actualizar el cliente",
                 icon: "error",
-                timer: 3000
+                timer: 3000,
+                customClass:{
+                        confirmButton: 'text-black'
+                    }
             });
         }
     };
