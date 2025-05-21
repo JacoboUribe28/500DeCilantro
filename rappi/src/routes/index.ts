@@ -62,8 +62,9 @@ const coreRoutes = [
   {
   path: '/tracking',
   title: 'Tracking',
-  component: Mapa,
+  component: Mapa, 
 },
+
   {
     path: '/list-users',
     title: 'ListUsers',
