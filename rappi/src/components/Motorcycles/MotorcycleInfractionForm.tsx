@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MotorcycleInfraction } from "../../models/MotorcycleInfraction";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { MotorcycleInfractionManager } from "../../core/MotorcycleInfractionManager";
+import { Motorcycle } from "../../models/motorcycle";
+import { Infraction } from "../../models/Infraction";
 
 interface Props {
-  mode: 1 | 2; // 1 = Crear, 2 = Editar (opcional para reuso)
+  mode: 1 | 2;
   handleCreate: (data: MotorcycleInfraction) => void;
 }
 
@@ -24,6 +27,14 @@ const MotorcycleInfractionForm: React.FC<Props> = ({ mode, handleCreate }) => {
     resolver: yupResolver(schema),
   });
 
+  const [motos, setMotos] = useState<Motorcycle[]>([]);
+  const [multas, setMultas] = useState<Infraction[]>([]);
+
+  useEffect(() => {
+    MotorcycleInfractionManager.obtenerMotos().then(setMotos);
+    MotorcycleInfractionManager.obtenerMultas().then(setMultas);
+  }, []);
+
   const onSubmit = (data: MotorcycleInfraction) => {
     handleCreate(data);
   };
@@ -31,14 +42,28 @@ const MotorcycleInfractionForm: React.FC<Props> = ({ mode, handleCreate }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label>ID de la Moto</label>
-        <input type="number" {...register("idMoto")} className="border p-2 w-full" />
+        <label>Moto</label>
+        <select {...register("idMoto")} className="border p-2 w-full">
+          <option value="">Seleccione una moto</option>
+          {motos.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.license_plate} - {m.brand}
+            </option>
+          ))}
+        </select>
         {errors.idMoto && <p className="text-red-500 text-sm">{errors.idMoto.message}</p>}
       </div>
 
       <div>
-        <label>ID de la Infracción</label>
-        <input type="number" {...register("idInfraccion")} className="border p-2 w-full" />
+        <label>Infracción</label>
+        <select {...register("idInfraccion")} className="border p-2 w-full">
+          <option value="">Seleccione una infracción</option>
+          {multas.map((inf) => (
+            <option key={inf.id} value={inf.id}>
+              {inf.id} - {inf.name}
+            </option>
+          ))}
+        </select>
         {errors.idInfraccion && <p className="text-red-500 text-sm">{errors.idInfraccion.message}</p>}
       </div>
 
@@ -48,8 +73,8 @@ const MotorcycleInfractionForm: React.FC<Props> = ({ mode, handleCreate }) => {
         {errors.fecha && <p className="text-red-500 text-sm">{errors.fecha.message}</p>}
       </div>
 
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-        {mode === 1 ? "Registrar Infracción" : "Actualizar"}
+      <button type="submit" className="bg-blue text-black px-4 py-2 rounded">
+        Crear la infracción de la moto
       </button>
     </form>
   );

@@ -2,7 +2,7 @@ import {
   createMotorcycleInfraction,
   updateMotorcycleInfraction,
 } from "../services/motorcycleInfractionService";
-import { getMotorcycles } from "@/services/motorcycleService";
+import { getMotorcycles } from "../services/motorcycleService";
 import { getInfractions } from "../services/infractionService";
 import { MotorcycleInfraction } from "../models/MotorcycleInfraction";
 import { Motorcycle } from "../models/motorcycle";
