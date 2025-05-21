@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
-// Conexión con opción transport para evitar polling (que da problemas)
 const socket = io("http://localhost:5000", {
   transports: ["websocket"],
   withCredentials: true,
@@ -9,27 +8,34 @@ const socket = io("http://localhost:5000", {
 
 const Navbar = () => {
   const [notifications, setNotifications] = useState(0);
+  const prevNotifications = useRef(0);
+  const audioRef = useRef<HTMLAudioElement>(null); // <- TIPO CORRECTO
 
   useEffect(() => {
     socket.on("new_notification", () => {
       setNotifications((prev) => prev + 1);
     });
 
-    // Cleanup para evitar fugas
     return () => {
       socket.off("new_notification");
     };
   }, []);
 
-  console.log("notificaciones", notifications);
+  useEffect(() => {
+    if (notifications > prevNotifications.current && audioRef.current) {
+      audioRef.current.play();
+    }
+    prevNotifications.current = notifications;
+  }, [notifications]);
 
   return (
     <nav className="p-4 bg-blue-600 text-black flex justify-between">
       <div className="relative">
-        <button className="relative">
+        <audio ref={audioRef} src="/notification.mp3" preload="auto" />
+        <button className="relative flex items-center gap-2">
           🔔 Notificaciones
           {notifications > 0 && (
-            <span className="absolute top-0 right-0 bg-red-500 text-xs px-2 py-1 rounded-full">
+            <span className="bg-red-500 text-xs px-2 py-1 rounded-full">
               {notifications}
             </span>
           )}
