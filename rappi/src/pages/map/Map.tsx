@@ -11,6 +11,8 @@ import { io } from 'socket.io-client';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const motorcycleIcon = new L.Icon({
   iconUrl:
     'https://cdn-icons-png.flaticon.com/512/7541/7541708.png',
@@ -35,11 +37,11 @@ const MotorcycleTracker = ({ licensePlate }: { licensePlate: string }) => {
   const [position, setPosition] = useState<Coordinate>({ lat: 5.064, lng: -75.496 });
 
   useEffect(() => {
-    axios.post(`http://localhost:5000/motorcycles/track/${licensePlate}`).catch(err => {
+    axios.post(`${API_URL}/motorcycles/track/${licensePlate}`).catch(err => {
       console.error('Error iniciando seguimiento:', err.message);
     });
 
-    const socket = io('http://localhost:5000');
+    const socket = io(`${API_URL}` );
     socket.on(licensePlate, (coord: Coordinate) => {
       if (coord.lat && coord.lng) {
         console.log('Recibiendo coordenadas:', coord);
@@ -49,7 +51,7 @@ const MotorcycleTracker = ({ licensePlate }: { licensePlate: string }) => {
     });
 
     return () => {
-      axios.post(`http://localhost:5000/motorcycles/stop/${licensePlate}`).catch(err => {
+      axios.post(`${API_URL}/motorcycles/stop/${licensePlate}`).catch(err => {
         console.error('Error deteniendo seguimiento:', err.message);
       });
       socket.disconnect();
