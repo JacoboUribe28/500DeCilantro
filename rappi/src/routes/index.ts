@@ -55,10 +55,17 @@ const viewPhoto = lazy(() => import('../pages/Photo/View'));
 const viewProduct = lazy(() => import('../pages/Product/View'));
 const viewShift = lazy(() => import('../pages/Shift/View'));
 const Mapa = lazy(() => import('../pages/map/TrackingPage'));
+const Mapa2 = lazy(() => import('../pages/map/MapPage'));
+
 
 
 
 const coreRoutes = [
+  {
+    path: '/mapa',
+    title: 'Mapa',
+    component: Mapa2,
+  },
   {
   path: '/tracking',
   title: 'Tracking',
